@@ -33,6 +33,7 @@ using namespace std;
 HandView::HandView(BRect frame)
 : BView(frame, "HandView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW)
 {
+	action = Action::None;
 }
 
 HandView::~HandView()
@@ -64,22 +65,44 @@ void HandView::FrameResized(float width, float height)
 
 void HandView::MouseDown(BPoint point)
 {
-	clog<<"mouse down"<<endl;
+	action = Action::Pencil;
+	outline.push_back(point);
+	Invalidate();
 }
 
 void HandView::MouseUp(BPoint point)
 {
-	clog<<"mouse up"<<endl;
+	action = Action::None;
+	outline.clear();
+	Invalidate();
 }
 
 void HandView::MouseMoved(BPoint point, uint32 transit,const BMessage* message)
 {
+	if (action==Action::Pencil) {
+		outline.push_back(point);
+		Invalidate();
+	}
 }
 
 void HandView::Draw(BRect updateRect)
 {
-	rgb_color background = {253,246,227,255};
+	rgb_color bg = {253,246,227,255};
+	rgb_color fg = {0,0,0,0};
 	
-	SetHighColor(background);
+	SetHighColor(bg);
 	FillRect(Bounds());
+	
+	if (action == Action::Pencil) {
+		size_t count = outline.size();
+		if (count>=2) {
+			BeginLineArray(count);
+			
+			for (size_t n=0;n<count-1;n++) {
+				AddLine(outline[n],outline[n+1],fg);
+			}
+			
+			EndLineArray();
+		}
+	}
 }

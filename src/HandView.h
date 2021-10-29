@@ -27,6 +27,14 @@ SOFTWARE.
 
 #include <View.h>
 
+#include <vector>
+
+enum class Action
+{
+	None,
+	Pencil
+};
+
 class HandView : public BView
 {
 	public:
@@ -41,5 +49,11 @@ class HandView : public BView
 	virtual void MouseUp(BPoint point);
 	virtual void MouseMoved(BPoint point, uint32 transit,const BMessage* message);
 	virtual void Draw(BRect updateRect);
+	
+	protected:
+	
+	Action action;
+	std::vector<BPoint> outline;
+	
 };
 #endif
