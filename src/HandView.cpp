@@ -22,25 +22,64 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_WINDOW
-#define HAND_WINDOW
-
 #include "HandView.h"
 
 #include <Window.h>
 
-class HandWindow : public BWindow
-{
-	public:
-	
-	HandWindow();
-	~HandWindow();
-	
-	virtual bool QuitRequested();
-	
-	protected:
-	
-	HandView* view;
-};
+#include <iostream>
 
-#endif
+using namespace std;
+
+HandView::HandView(BRect frame)
+: BView(frame, "HandView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW)
+{
+}
+
+HandView::~HandView()
+{
+}
+
+void HandView::AttachedToWindow(void)
+{
+	ResizeTo(Window()->Bounds().right,Window()->Bounds().bottom);
+}
+
+void HandView::MessageReceived(BMessage* message)
+{
+	switch (message->what) {
+		case B_MOUSE_WHEEL_CHANGED:
+
+		break;
+
+		default:
+			BView::MessageReceived(message);
+		break;
+	}
+}
+
+void HandView::FrameResized(float width, float height)
+{
+	BView::FrameResized(width,height);
+}
+
+void HandView::MouseDown(BPoint point)
+{
+	clog<<"mouse down"<<endl;
+}
+
+void HandView::MouseUp(BPoint point)
+{
+	clog<<"mouse up"<<endl;
+}
+
+void HandView::MouseMoved(BPoint point, uint32 transit,const BMessage* message)
+{
+}
+
+void HandView::Draw(BRect updateRect)
+{
+	rgb_color background = {253,246,227,255};
+	
+	SetHighColor(background);
+	FillRect(Bounds());
+}

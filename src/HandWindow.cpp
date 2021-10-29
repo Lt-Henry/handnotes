@@ -29,6 +29,8 @@ SOFTWARE.
 HandWindow::HandWindow()
 : BWindow(BRect(100, 100, 100 + 720, 100 + 512), "HandNotes", B_TITLED_WINDOW, 0)
 {
+	view = new HandView(BRect(0,0,100,100));
+	AddChild(view);
 }
 
 HandWindow::~HandWindow()

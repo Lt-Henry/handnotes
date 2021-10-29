@@ -2,6 +2,6 @@
 cpp = meson.get_compiler('cpp')
 be = cpp.find_library('be')
 
-executable('handnotes', ['main.cpp','HandApplication.cpp','HandWindow.cpp'],
+executable('handnotes', ['main.cpp','HandApplication.cpp','HandWindow.cpp','HandView.cpp'],
 	dependencies:[be]
 	)

@@ -22,25 +22,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_WINDOW
-#define HAND_WINDOW
+#ifndef HAND_VIEW
+#define HAND_VIEW
 
-#include "HandView.h"
+#include <View.h>
 
-#include <Window.h>
-
-class HandWindow : public BWindow
+class HandView : public BView
 {
 	public:
-	
-	HandWindow();
-	~HandWindow();
-	
-	virtual bool QuitRequested();
-	
-	protected:
-	
-	HandView* view;
-};
 
+	HandView(BRect frame);
+	~HandView();
+
+	virtual void AttachedToWindow(void);
+	virtual void MessageReceived(BMessage* message);
+	virtual void FrameResized(float width, float height);
+	virtual void MouseDown(BPoint point);
+	virtual void MouseUp(BPoint point);
+	virtual void MouseMoved(BPoint point, uint32 transit,const BMessage* message);
+	virtual void Draw(BRect updateRect);
+};
 #endif
