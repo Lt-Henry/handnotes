@@ -34,7 +34,8 @@ SOFTWARE.
 enum class Action
 {
 	None,
-	Pencil
+	Pencil,
+	Drag
 };
 
 class HandView : public BView
@@ -55,6 +56,7 @@ class HandView : public BView
 	protected:
 	
 	Action action;
+	BPoint start;
 	std::vector<BPoint> outline;
 	std::vector<Path> paths;
 	

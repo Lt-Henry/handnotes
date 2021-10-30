@@ -30,8 +30,6 @@ using namespace std;
 
 int main (int argc,char* argv[])
 {
-	clog<<"Hand Notes"<<endl;
-	
 	HandApplication* app = new HandApplication();
 	app->Run();
 	

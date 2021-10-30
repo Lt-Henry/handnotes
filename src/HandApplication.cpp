@@ -36,5 +36,4 @@ HandApplication::HandApplication(): BApplication(APP_SIGNATURE)
 
 void HandApplication::ReadyToRun()
 {
-	clog<<"Ready!"<<endl;
 }

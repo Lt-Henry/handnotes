@@ -63,39 +63,68 @@ void HandView::FrameResized(float width, float height)
 	BView::FrameResized(width,height);
 }
 
-void HandView::MouseDown(BPoint point)
+void HandView::MouseDown(BPoint where)
 {
-	action = Action::Pencil;
-	outline.push_back(point);
-	Invalidate();
+	int32 buttons = Window()->CurrentMessage()->FindInt32("buttons");
+
+	if ((buttons & B_PRIMARY_MOUSE_BUTTON) != 0) {
+		action = Action::Pencil;
+		outline.push_back(where-Origin());
+		Invalidate();
+	}
+
+	if ((buttons & B_SECONDARY_MOUSE_BUTTON) != 0) {
+		action = Action::Drag;
+		start = where-Origin();
+	}
 }
 
-void HandView::MouseUp(BPoint point)
+void HandView::MouseUp(BPoint where)
 {
-	action = Action::None;
-	Path tmp;
-	tmp.color = {255,117,0,0};
-	tmp.vertices = outline;
-	paths.push_back(tmp);
-	outline.clear();
-	Invalidate();
+
+
+	if (action == Action::Pencil) {
+		action = Action::None;
+		Path tmp;
+		tmp.color = {255,117,0,0};
+		tmp.vertices = outline;
+		paths.push_back(tmp);
+		outline.clear();
+		Invalidate();
+	}
+	
+	if (action == Action::Drag) {
+		action = Action::None;
+		Invalidate();
+	}
 }
 
-void HandView::MouseMoved(BPoint point, uint32 transit,const BMessage* message)
+void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 {
 	if (action==Action::Pencil) {
-		outline.push_back(point);
+		outline.push_back(where-Origin());
+		Invalidate();
+	}
+	
+	if (action == Action::Drag) {
+		BPoint tmp = where-start;
+		SetOrigin(tmp.x,tmp.y);
 		Invalidate();
 	}
 }
 
 void HandView::Draw(BRect updateRect)
 {
-	rgb_color bg = {253,246,227,255};
+	double dpi=96.0;
+	
+	//rgb_color bg = {253,246,227,255};
+	rgb_color bg = {250,250,250,255};
 	rgb_color fg = {0,0,0,0};
 	
 	SetHighColor(bg);
-	FillRect(Bounds());
+	FillRect(BRect(0,0,dpi*11.7,dpi*16.5));
+	SetHighColor(fg);
+	StrokeRect(BRect(0,0,dpi*11.7,dpi*16.5));
 	
 	for (Path& path : paths) {
 		size_t count = path.vertices.size();
