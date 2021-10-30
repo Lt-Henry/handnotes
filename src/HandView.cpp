@@ -73,6 +73,10 @@ void HandView::MouseDown(BPoint point)
 void HandView::MouseUp(BPoint point)
 {
 	action = Action::None;
+	Path tmp;
+	tmp.color = {255,117,0,0};
+	tmp.vertices = outline;
+	paths.push_back(tmp);
 	outline.clear();
 	Invalidate();
 }
@@ -92,6 +96,18 @@ void HandView::Draw(BRect updateRect)
 	
 	SetHighColor(bg);
 	FillRect(Bounds());
+	
+	for (Path& path : paths) {
+		size_t count = path.vertices.size();
+		if (count<2) {
+			continue;
+		}
+		BeginLineArray(count);
+		for (size_t n=0;n<count-1;n++) {
+				AddLine(path.vertices[n],path.vertices[n+1],path.color);
+			}
+		EndLineArray();
+	}
 	
 	if (action == Action::Pencil) {
 		size_t count = outline.size();

@@ -22,41 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_VIEW
-#define HAND_VIEW
+#ifndef HAND_PATH
+#define HAND_PATH
 
-#include "Path.h"
-
+#include <Point.h>
 #include <View.h>
 
 #include <vector>
 
-enum class Action
-{
-	None,
-	Pencil
-};
-
-class HandView : public BView
+class Path
 {
 	public:
-
-	HandView(BRect frame);
-	~HandView();
-
-	virtual void AttachedToWindow(void);
-	virtual void MessageReceived(BMessage* message);
-	virtual void FrameResized(float width, float height);
-	virtual void MouseDown(BPoint point);
-	virtual void MouseUp(BPoint point);
-	virtual void MouseMoved(BPoint point, uint32 transit,const BMessage* message);
-	virtual void Draw(BRect updateRect);
-	
-	protected:
-	
-	Action action;
-	std::vector<BPoint> outline;
-	std::vector<Path> paths;
-	
+	rgb_color color;
+	float width;
+	std::vector<BPoint> vertices;
 };
+
 #endif
