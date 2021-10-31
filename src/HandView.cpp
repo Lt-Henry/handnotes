@@ -116,15 +116,35 @@ void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 void HandView::Draw(BRect updateRect)
 {
 	double dpi=96.0;
+	double page_width = 8.3 * dpi;
+	double page_height = 11.7 * dpi;
 	
 	//rgb_color bg = {253,246,227,255};
 	rgb_color bg = {250,250,250,255};
 	rgb_color fg = {0,0,0,0};
 	
 	SetHighColor(bg);
-	FillRect(BRect(0,0,dpi*11.7,dpi*16.5));
+	FillRect(BRect(0,0,page_width,page_height));
 	SetHighColor(fg);
-	StrokeRect(BRect(0,0,dpi*11.7,dpi*16.5));
+	StrokeRect(BRect(0,0,page_width,page_height));
+	
+	int dots_w = 9;
+	int dots_h = 12;
+	double dot_x=0.15;
+	double dot_y=0.35;
+	
+	for (int i=0;i<dots_w;i++) {
+		dot_y=0.35;
+		for (int j=0;j<dots_h;j++) {
+			SetHighColor(fg);
+			FillEllipse(BPoint(dot_x*dpi,dot_y*dpi),1.0,1.0);
+			
+			dot_y+=1.0;
+		}
+		dot_x+=1.0;
+	}
+	
+	SetPenSize(1.5f);
 	
 	for (Path& path : paths) {
 		size_t count = path.vertices.size();
