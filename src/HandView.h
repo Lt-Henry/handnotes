@@ -55,6 +55,8 @@ class HandView : public BView
 	virtual void Draw(BRect updateRect);
 	
 	protected:
+
+	float scale;
 	
 	Action action;
 	BPoint start;

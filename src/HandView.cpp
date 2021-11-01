@@ -33,6 +33,7 @@ using namespace std;
 HandView::HandView(BRect frame)
 : BView(frame, "HandView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW)
 {
+	scale = 1.0f;
 	action = Action::None;
 	cursor_default = new BCursor(B_CURSOR_ID_SYSTEM_DEFAULT);
 	cursor_grab = new BCursor(B_CURSOR_ID_GRABBING);
@@ -49,9 +50,21 @@ void HandView::AttachedToWindow(void)
 
 void HandView::MessageReceived(BMessage* message)
 {
+	float delta;
+	
 	switch (message->what) {
 		case B_MOUSE_WHEEL_CHANGED:
+			delta = message->FindFloat("be:wheel_delta_y");
+			scale = scale + (delta*0.1f);
 
+			if (scale<0.1f) {
+				scale=0.1f;
+			}
+			
+			if (scale>3.0f) {
+				scale=3.0f;
+			}
+			
 		break;
 
 		default:
