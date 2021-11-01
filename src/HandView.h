@@ -52,6 +52,7 @@ class HandView : public BView
 	virtual void MouseDown(BPoint point);
 	virtual void MouseUp(BPoint point);
 	virtual void MouseMoved(BPoint point, uint32 transit,const BMessage* message);
+	virtual void KeyDown(const char* bytes, int32 numBytes);
 	virtual void Draw(BRect updateRect);
 	
 	protected:

@@ -48,6 +48,7 @@ HandView::~HandView()
 void HandView::AttachedToWindow(void)
 {
 	ResizeTo(Window()->Bounds().right,Window()->Bounds().bottom);
+	SetEventMask(B_KEYBOARD_EVENTS);
 }
 
 void HandView::MessageReceived(BMessage* message)
@@ -112,7 +113,7 @@ void HandView::MouseUp(BPoint where)
 	if (action == Action::Pencil) {
 		action = Action::None;
 		Path tmp;
-		tmp.color = {255,117,0,0};
+		tmp.color = {94,129,172,255};
 		tmp.vertices = outline;
 		paths.push_back(tmp);
 		outline.clear();
@@ -141,13 +142,29 @@ void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 	if (action == Action::Drag) {
 		where.x = where.x / scale;
 		where.y = where.y / scale;
-		//where.x = where.x - ox;
-		//where.y = where.y - oy;
 		BPoint tmp = where-start;
-		//SetOrigin(tmp.x,tmp.y);
 		ox = tmp.x;
 		oy = tmp.y;
 		Invalidate();
+	}
+}
+
+void HandView::KeyDown(const char* bytes, int32 numBytes)
+{
+	for (int32 n=0;n<numBytes;n++) {
+		switch(bytes[n]) {
+			case 'h':
+				ox=0;
+				oy=0;
+				Invalidate();
+			break;
+			
+			case 'z':
+			//TODO: simple undo mechanism
+				paths.pop_back();
+				Invalidate();
+			break;
+		}
 	}
 }
 
@@ -207,7 +224,7 @@ void HandView::Draw(BRect updateRect)
 			BeginLineArray(count);
 			
 			for (size_t n=0;n<count-1;n++) {
-				AddLine(outline[n],outline[n+1],fg);
+				AddLine(outline[n],outline[n+1],{94,129,172,255});
 			}
 			
 			EndLineArray();
