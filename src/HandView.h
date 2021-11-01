@@ -57,6 +57,7 @@ class HandView : public BView
 	protected:
 
 	float scale;
+	float ox,oy;
 	
 	Action action;
 	BPoint start;

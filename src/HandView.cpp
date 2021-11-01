@@ -34,6 +34,8 @@ HandView::HandView(BRect frame)
 : BView(frame, "HandView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW)
 {
 	scale = 1.0f;
+	ox = 0.0f;
+	oy = 0.0f;
 	action = Action::None;
 	cursor_default = new BCursor(B_CURSOR_ID_SYSTEM_DEFAULT);
 	cursor_grab = new BCursor(B_CURSOR_ID_GRABBING);
@@ -64,7 +66,7 @@ void HandView::MessageReceived(BMessage* message)
 			if (scale>3.0f) {
 				scale=3.0f;
 			}
-			
+			Invalidate();
 		break;
 
 		default:
@@ -84,20 +86,28 @@ void HandView::MouseDown(BPoint where)
 
 	if ((buttons & B_PRIMARY_MOUSE_BUTTON) != 0) {
 		action = Action::Pencil;
-		outline.push_back(where-Origin());
+		
+		where.x = where.x / scale;
+		where.y = where.y / scale;
+		where.x = where.x - ox;
+		where.y = where.y - oy;
+		outline.push_back(where);
 		Invalidate();
 	}
 
 	if ((buttons & B_SECONDARY_MOUSE_BUTTON) != 0) {
 		SetViewCursor(cursor_grab);
 		action = Action::Drag;
-		start = where-Origin();
+		where.x = where.x / scale;
+		where.y = where.y / scale;
+		where.x = where.x - ox;
+		where.y = where.y - oy;
+		start = where;
 	}
 }
 
 void HandView::MouseUp(BPoint where)
 {
-
 
 	if (action == Action::Pencil) {
 		action = Action::None;
@@ -119,13 +129,24 @@ void HandView::MouseUp(BPoint where)
 void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 {
 	if (action==Action::Pencil) {
-		outline.push_back(where-Origin());
+		
+		where.x = where.x / scale;
+		where.y = where.y / scale;
+		where.x = where.x - ox;
+		where.y = where.y - oy;
+		outline.push_back(where);
 		Invalidate();
 	}
 	
 	if (action == Action::Drag) {
+		where.x = where.x / scale;
+		where.y = where.y / scale;
+		//where.x = where.x - ox;
+		//where.y = where.y - oy;
 		BPoint tmp = where-start;
-		SetOrigin(tmp.x,tmp.y);
+		//SetOrigin(tmp.x,tmp.y);
+		ox = tmp.x;
+		oy = tmp.y;
 		Invalidate();
 	}
 }
@@ -139,6 +160,11 @@ void HandView::Draw(BRect updateRect)
 	//rgb_color bg = {253,246,227,255};
 	rgb_color bg = {250,250,250,255};
 	rgb_color fg = {0,0,0,0};
+	
+	BAffineTransform mat;
+	SetTransform(mat);
+	ScaleBy(scale,scale);
+	TranslateBy(ox,oy);
 	
 	SetHighColor(bg);
 	FillRect(BRect(0,0,page_width,page_height));
