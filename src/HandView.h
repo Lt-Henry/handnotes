@@ -28,6 +28,7 @@ SOFTWARE.
 #include "Path.h"
 
 #include <View.h>
+#include <Cursor.h>
 
 #include <vector>
 
@@ -60,5 +61,7 @@ class HandView : public BView
 	std::vector<BPoint> outline;
 	std::vector<Path> paths;
 	
+	BCursor* cursor_default;
+	BCursor* cursor_grab;
 };
 #endif

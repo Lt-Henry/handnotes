@@ -34,6 +34,8 @@ HandView::HandView(BRect frame)
 : BView(frame, "HandView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW)
 {
 	action = Action::None;
+	cursor_default = new BCursor(B_CURSOR_ID_SYSTEM_DEFAULT);
+	cursor_grab = new BCursor(B_CURSOR_ID_GRABBING);
 }
 
 HandView::~HandView()
@@ -74,6 +76,7 @@ void HandView::MouseDown(BPoint where)
 	}
 
 	if ((buttons & B_SECONDARY_MOUSE_BUTTON) != 0) {
+		SetViewCursor(cursor_grab);
 		action = Action::Drag;
 		start = where-Origin();
 	}
@@ -94,6 +97,7 @@ void HandView::MouseUp(BPoint where)
 	}
 	
 	if (action == Action::Drag) {
+		SetViewCursor(cursor_default);
 		action = Action::None;
 		Invalidate();
 	}
