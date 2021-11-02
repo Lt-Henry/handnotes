@@ -57,7 +57,7 @@ void HandView::MessageReceived(BMessage* message)
 	
 	switch (message->what) {
 		case B_MOUSE_WHEEL_CHANGED:
-			delta = message->FindFloat("be:wheel_delta_y");
+			delta = -message->FindFloat("be:wheel_delta_y");
 			scale = scale + (delta*0.1f);
 
 			if (scale<0.1f) {
@@ -113,7 +113,7 @@ void HandView::MouseUp(BPoint where)
 	if (action == Action::Pencil) {
 		action = Action::None;
 		Path tmp;
-		tmp.color = {94,129,172,255};
+		tmp.color = {94,129,172,128};
 		tmp.vertices = outline;
 		paths.push_back(tmp);
 		outline.clear();
@@ -188,46 +188,34 @@ void HandView::Draw(BRect updateRect)
 	SetHighColor(fg);
 	StrokeRect(BRect(0,0,page_width,page_height));
 	
-	int dots_w = 9;
-	int dots_h = 12;
-	double dot_x=0.15;
-	double dot_y=0.35;
+	int dots_w = 8.0/0.196;
+	int dots_h = 11.0/0.196;
+	double dot_x=0.3;
+	double dot_y=0.7;
 	
 	for (int i=0;i<dots_w;i++) {
 		dot_y=0.35;
 		for (int j=0;j<dots_h;j++) {
-			SetHighColor(fg);
-			FillEllipse(BPoint(dot_x*dpi,dot_y*dpi),1.0,1.0);
+			SetHighColor({200,200,200,255});
+			FillEllipse(BPoint(dot_x*dpi,dot_y*dpi),0.5,0.5);
 			
-			dot_y+=1.0;
+			dot_y+=0.196;
 		}
-		dot_x+=1.0;
+		dot_x+=0.196;
 	}
 	
 	SetPenSize(1.5f);
+	SetLineMode(B_ROUND_CAP,B_BUTT_JOIN);
+	SetDrawingMode(B_OP_ALPHA);
 	
 	for (Path& path : paths) {
-		size_t count = path.vertices.size();
-		if (count<2) {
-			continue;
-		}
-		BeginLineArray(count);
-		for (size_t n=0;n<count-1;n++) {
-				AddLine(path.vertices[n],path.vertices[n+1],path.color);
-			}
-		EndLineArray();
+
+		SetHighColor({94,129,172,128});
+		StrokePolygon(path.vertices.data(),path.vertices.size(),false);
 	}
 	
 	if (action == Action::Pencil) {
-		size_t count = outline.size();
-		if (count>=2) {
-			BeginLineArray(count);
-			
-			for (size_t n=0;n<count-1;n++) {
-				AddLine(outline[n],outline[n+1],{94,129,172,255});
-			}
-			
-			EndLineArray();
-		}
+		SetHighColor({94,129,172,128});
+		StrokePolygon(outline.data(),outline.size(),false);
 	}
 }
