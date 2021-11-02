@@ -29,8 +29,20 @@ SOFTWARE.
 HandWindow::HandWindow()
 : BWindow(BRect(100, 100, 100 + 720, 100 + 512), "HandNotes", B_TITLED_WINDOW, 0)
 {
-	view = new HandView(BRect(0,0,100,100));
+	htoolbar = new BGroupView();
+	htoolbar->ResizeTo(Bounds().Width(),36);
+	htoolbar->SetResizingMode(B_FOLLOW_LEFT_RIGHT);
+	AddChild(htoolbar);
+	
+	view = new HandView(BRect(0,36,100,100));
 	AddChild(view);
+	
+	rtoolbar = new BGroupView(B_VERTICAL);
+	rtoolbar->MoveTo(view->Bounds().Width()-36,36);
+	rtoolbar->ResizeTo(36,view->Bounds().Height());
+	rtoolbar->SetResizingMode(B_FOLLOW_V_CENTER | B_FOLLOW_RIGHT);
+	view->AddChild(rtoolbar);
+	
 }
 
 HandWindow::~HandWindow()

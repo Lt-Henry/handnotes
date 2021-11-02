@@ -28,6 +28,7 @@ SOFTWARE.
 #include "HandView.h"
 
 #include <Window.h>
+#include <GroupView.h>
 
 class HandWindow : public BWindow
 {
@@ -39,6 +40,9 @@ class HandWindow : public BWindow
 	virtual bool QuitRequested();
 	
 	protected:
+	
+	BGroupView* htoolbar;
+	BGroupView* rtoolbar;
 	
 	HandView* view;
 };

@@ -130,11 +130,11 @@ void HandView::MouseUp(BPoint where)
 void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 {
 	if (action==Action::Pencil) {
-		
 		where.x = where.x / scale;
 		where.y = where.y / scale;
 		where.x = where.x - ox;
 		where.y = where.y - oy;
+		
 		outline.push_back(where);
 		Invalidate();
 	}
@@ -170,6 +170,7 @@ void HandView::KeyDown(const char* bytes, int32 numBytes)
 
 void HandView::Draw(BRect updateRect)
 {
+	
 	double dpi=96.0;
 	double page_width = 8.3 * dpi;
 	double page_height = 11.7 * dpi;
