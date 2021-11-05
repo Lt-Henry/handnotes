@@ -112,10 +112,7 @@ void HandView::MouseUp(BPoint where)
 
 	if (action == Action::Pencil) {
 		action = Action::None;
-		Path tmp;
-		tmp.color = {94,129,172,128};
-		tmp.vertices = outline;
-		paths.push_back(tmp);
+		paths.push_back(Path(outline,{94,129,172,128},1.5f));
 		outline.clear();
 		Invalidate();
 	}
@@ -205,14 +202,20 @@ void HandView::Draw(BRect updateRect)
 		dot_x+=0.196;
 	}
 	
-	SetPenSize(1.5f);
 	SetLineMode(B_ROUND_CAP,B_BUTT_JOIN);
 	SetDrawingMode(B_OP_ALPHA);
 	
 	for (Path& path : paths) {
 
-		SetHighColor({94,129,172,128});
+		SetHighColor(path.color);
+		SetPenSize(path.width);
 		StrokePolygon(path.vertices.data(),path.vertices.size(),false);
+		/*
+		for (BPoint& point : path.vertices) {
+			SetHighColor({200,0,0,255});
+			FillEllipse(point,0.5,0.5);
+		}
+		*/
 	}
 	
 	if (action == Action::Pencil) {

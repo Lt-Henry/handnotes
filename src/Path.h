@@ -36,6 +36,8 @@ class Path
 	rgb_color color;
 	float width;
 	std::vector<BPoint> vertices;
+	
+	Path(std::vector<BPoint>& nodes, rgb_color color, float width);
 };
 
 #endif

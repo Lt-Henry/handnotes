@@ -23,3 +23,74 @@ SOFTWARE.
 */
 
 #include "Path.h"
+
+#include <cmath>
+#include <iostream>
+
+using namespace std;
+
+static float dot(BPoint &a,BPoint& b)
+{
+	return a.x * b.x + a.y * b.y;;
+}
+
+static float norm(BPoint &a)
+{
+	return std::sqrt((a.x*a.x)+(a.y*a.y));
+}
+
+static void ramer(vector<BPoint>& nodes, vector<int>& valids,int start,int end)
+{
+	float epsilon=0.5f;
+	int worst=start;
+	float current=0.0f;
+	
+	for (int n=start;n<=end;n++) {
+		BPoint M=nodes[end]-nodes[start];
+		
+		BPoint AP = nodes[n] - nodes[start];
+		float t0 = dot(M,AP) / dot(M,M);
+		
+		BPoint C = M;
+		C.x*=t0;
+		C.y*=t0;
+		C = C + nodes[start];
+		
+		BPoint PC = nodes[n] - C;
+		float dist = norm(PC);
+		
+		if (dist>current) {
+			current = dist;
+			worst = n;
+		}
+	}
+	
+	if (current>epsilon) {
+		ramer(nodes,valids,start,worst);
+		valids.push_back(worst);
+		ramer(nodes,valids,worst,end);
+	}
+}
+
+Path::Path(vector<BPoint>& nodes, rgb_color color, float width) :
+	color(color), width(width)
+{
+	if (nodes.size()<3) {
+		vertices = nodes;
+	}
+	else {
+	
+		vector<int> valids;
+		
+		valids.push_back(0);
+		ramer(nodes,valids,0,nodes.size()-1);
+		valids.push_back(nodes.size()-1);
+		
+		for (int n:valids) {
+			vertices.push_back(nodes[n]);
+		}
+	}
+	
+	clog<<"source: "<<nodes.size()<<endl;
+	clog<<"ramer: "<<vertices.size()<<endl;
+}
