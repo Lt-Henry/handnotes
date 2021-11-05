@@ -35,8 +35,14 @@ SOFTWARE.
 enum class Action
 {
 	None,
-	Pencil,
+	Draw,
 	Drag
+};
+
+enum class Tool
+{
+	Pencil,
+	Highlighter
 };
 
 class HandView : public BView
@@ -61,6 +67,8 @@ class HandView : public BView
 	float ox,oy;
 	
 	Action action;
+	Tool tool;
+	
 	BPoint start;
 	std::vector<BPoint> outline;
 	std::vector<Path> paths;
