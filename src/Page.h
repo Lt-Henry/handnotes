@@ -50,6 +50,13 @@ namespace handnotes
 		protected:
 		
 		PageFormat format;
+		
+		double dpi;
+		double dpmm;
+		
+		double width;
+		double height;
+		
 		BPicture* picture;
 	};
 }

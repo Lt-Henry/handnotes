@@ -24,10 +24,38 @@ SOFTWARE.
 
 #include "Page.h"
 
-using namespace handnotes;
+#include <vector>
 
-Page::Page(PageFormat format) : format(format), picture(nullptr)
+using namespace handnotes;
+using namespace std;
+
+typedef struct 
 {
+	PageFormat format;
+	// size in mm
+	double width;
+	double height;
+	
+} PageData;
+
+vector<PageData> pageInfo = {
+	{PageFormat::A3,297.0,420.0},
+	{PageFormat::A4,210.0,297.0},
+	{PageFormat::A4Landscape,297.0,210.0},
+	{PageFormat::A5,148.0,210.0}
+};
+
+Page::Page(PageFormat format) : format(format), picture(nullptr), dpi(96.0)
+{
+	dpmm = dpi/25.4;
+	
+	for (PageData& info : pageInfo) {
+		if (info.format==format) {
+			width = info.width;
+			height = info.height;
+			break;
+		}
+	}
 }
 
 Page::~Page()
@@ -45,9 +73,8 @@ BPicture* Page::Draw(BView* view)
 
 	view->BeginPicture(new BPicture);
 
-	double dpi=96.0;
-	double page_width = 8.3 * dpi;
-	double page_height = 11.7 * dpi;
+	double page_width = width * dpmm;
+	double page_height = height * dpmm;
 	
 	rgb_color bg = {250,250,250,255};
 	rgb_color fg = {0,0,0,0};
