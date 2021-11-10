@@ -22,61 +22,58 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_VIEW
-#define HAND_VIEW
-
-#include "Path.h"
 #include "Page.h"
 
-#include <View.h>
-#include <Cursor.h>
+using namespace handnotes;
 
-#include <vector>
-
-enum class Action
+Page::Page(PageFormat format) : format(format), picture(nullptr)
 {
-	None,
-	Draw,
-	Drag
-};
+}
 
-enum class Tool
+Page::~Page()
 {
-	Pencil,
-	Highlighter
-};
+	if (picture) {
+		delete picture;
+	}
+}
 
-class HandView : public BView
+BPicture* Page::Draw(BView* view)
 {
-	public:
+	if (picture) {
+		return picture;
+	}
 
-	HandView(BRect frame);
-	~HandView();
+	view->BeginPicture(new BPicture);
 
-	virtual void AttachedToWindow(void);
-	virtual void MessageReceived(BMessage* message);
-	virtual void FrameResized(float width, float height);
-	virtual void MouseDown(BPoint point);
-	virtual void MouseUp(BPoint point);
-	virtual void MouseMoved(BPoint point, uint32 transit,const BMessage* message);
-	virtual void KeyDown(const char* bytes, int32 numBytes);
-	virtual void Draw(BRect updateRect);
+	double dpi=96.0;
+	double page_width = 8.3 * dpi;
+	double page_height = 11.7 * dpi;
 	
-	protected:
+	rgb_color bg = {250,250,250,255};
+	rgb_color fg = {0,0,0,0};
+	
+	view->SetHighColor(bg);
+	view->FillRect(BRect(0,0,page_width,page_height));
+	view->SetHighColor(fg);
+	view->StrokeRect(BRect(0,0,page_width,page_height));
+	
+	int dots_w = 8.0/0.196;
+	int dots_h = 11.0/0.196;
+	double dot_x=0.3;
+	double dot_y=0.7;
+	
+	for (int i=0;i<dots_w;i++) {
+		dot_y=0.35;
+		for (int j=0;j<dots_h;j++) {
+			view->SetHighColor({200,200,200,255});
+			view->FillEllipse(BPoint(dot_x*dpi,dot_y*dpi),0.5,0.5);
+			
+			dot_y+=0.196;
+		}
+		dot_x+=0.196;
+	}
 
-	double scale;
-	float ox,oy;
+	picture = view->EndPicture();
 	
-	Action action;
-	Tool tool;
-	
-	BPoint start;
-	std::vector<BPoint> outline;
-	std::vector<Path> paths;
-	
-	handnotes::Page* page;
-	
-	BCursor* cursor_default;
-	BCursor* cursor_grab;
-};
-#endif
+	return picture;
+}

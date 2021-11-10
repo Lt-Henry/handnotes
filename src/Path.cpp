@@ -41,7 +41,7 @@ static float norm(BPoint &a)
 
 static void ramer(vector<BPoint>& nodes, vector<int>& valids,int start,int end)
 {
-	float epsilon=0.5f;
+	float epsilon=0.3f;
 	int worst=start;
 	float current=0.0f;
 	

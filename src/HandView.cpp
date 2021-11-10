@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include <iostream>
 
+using namespace handnotes;
 using namespace std;
 
 HandView::HandView(BRect frame)
@@ -40,6 +41,8 @@ HandView::HandView(BRect frame)
 	tool = Tool::Pencil;
 	cursor_default = new BCursor(B_CURSOR_ID_SYSTEM_DEFAULT);
 	cursor_grab = new BCursor(B_CURSOR_ID_GRABBING);
+	
+	page = new handnotes::Page(PageFormat::A4);
 }
 
 HandView::~HandView()
@@ -58,17 +61,19 @@ void HandView::MessageReceived(BMessage* message)
 	
 	switch (message->what) {
 		case B_MOUSE_WHEEL_CHANGED:
-			delta = -message->FindFloat("be:wheel_delta_y");
-			scale = scale + (delta*0.1f);
+			if(message->FindFloat("be:wheel_delta_y",&delta) == B_OK) {
+				delta=-delta;
+				scale = scale + (delta*0.1);
 
-			if (scale<0.1f) {
-				scale=0.1f;
-			}
-			
-			if (scale>3.0f) {
-				scale=3.0f;
-			}
+				if (scale<0.1) {
+					scale=0.1;
+				}
+				
+				if (scale>3.0) {
+					scale=3.0;
+				}
 			Invalidate();
+			}
 		break;
 
 		default:
@@ -84,7 +89,11 @@ void HandView::FrameResized(float width, float height)
 
 void HandView::MouseDown(BPoint where)
 {
-	int32 buttons = Window()->CurrentMessage()->FindInt32("buttons");
+	int32 buttons;
+	
+	if(Window()->CurrentMessage()->FindInt32("buttons",&buttons) != B_OK) {
+		return;
+	}
 
 	if ((buttons & B_PRIMARY_MOUSE_BUTTON) != 0) {
 		action = Action::Draw;
@@ -135,12 +144,13 @@ void HandView::MouseUp(BPoint where)
 
 void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 {
+
 	if (action==Action::Draw) {
 		where.x = where.x / scale;
 		where.y = where.y / scale;
 		where.x = where.x - ox;
 		where.y = where.y - oy;
-		
+
 		outline.push_back(where);
 		Invalidate();
 	}
@@ -186,10 +196,6 @@ void HandView::KeyDown(const char* bytes, int32 numBytes)
 void HandView::Draw(BRect updateRect)
 {
 	
-	double dpi=96.0;
-	double page_width = 8.3 * dpi;
-	double page_height = 11.7 * dpi;
-	
 	//rgb_color bg = {253,246,227,255};
 	rgb_color bg = {250,250,250,255};
 	rgb_color fg = {0,0,0,0};
@@ -199,26 +205,7 @@ void HandView::Draw(BRect updateRect)
 	ScaleBy(scale,scale);
 	TranslateBy(ox,oy);
 	
-	SetHighColor(bg);
-	FillRect(BRect(0,0,page_width,page_height));
-	SetHighColor(fg);
-	StrokeRect(BRect(0,0,page_width,page_height));
-	
-	int dots_w = 8.0/0.196;
-	int dots_h = 11.0/0.196;
-	double dot_x=0.3;
-	double dot_y=0.7;
-	
-	for (int i=0;i<dots_w;i++) {
-		dot_y=0.35;
-		for (int j=0;j<dots_h;j++) {
-			SetHighColor({200,200,200,255});
-			FillEllipse(BPoint(dot_x*dpi,dot_y*dpi),0.5,0.5);
-			
-			dot_y+=0.196;
-		}
-		dot_x+=0.196;
-	}
+	DrawPicture(page->Draw(this));
 	
 	SetLineMode(B_ROUND_CAP,B_BUTT_JOIN);
 	SetDrawingMode(B_OP_ALPHA);

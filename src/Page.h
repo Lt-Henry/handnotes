@@ -22,61 +22,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_VIEW
-#define HAND_VIEW
-
-#include "Path.h"
-#include "Page.h"
+#ifndef HAND_PAGE
+#define HAND_PAGE
 
 #include <View.h>
-#include <Cursor.h>
+#include <Picture.h>
 
-#include <vector>
-
-enum class Action
+namespace handnotes
 {
-	None,
-	Draw,
-	Drag
-};
-
-enum class Tool
-{
-	Pencil,
-	Highlighter
-};
-
-class HandView : public BView
-{
-	public:
-
-	HandView(BRect frame);
-	~HandView();
-
-	virtual void AttachedToWindow(void);
-	virtual void MessageReceived(BMessage* message);
-	virtual void FrameResized(float width, float height);
-	virtual void MouseDown(BPoint point);
-	virtual void MouseUp(BPoint point);
-	virtual void MouseMoved(BPoint point, uint32 transit,const BMessage* message);
-	virtual void KeyDown(const char* bytes, int32 numBytes);
-	virtual void Draw(BRect updateRect);
+	enum class PageFormat
+	{
+		A3,
+		A4,
+		A4Landscape,
+		A5
+	};
 	
-	protected:
+	class Page
+	{
+		public:
+		
+		Page(PageFormat format);
+		~Page();
+		
+		BPicture* Draw(BView* view);
+		
+		protected:
+		
+		PageFormat format;
+		BPicture* picture;
+	};
+}
 
-	double scale;
-	float ox,oy;
-	
-	Action action;
-	Tool tool;
-	
-	BPoint start;
-	std::vector<BPoint> outline;
-	std::vector<Path> paths;
-	
-	handnotes::Page* page;
-	
-	BCursor* cursor_default;
-	BCursor* cursor_grab;
-};
 #endif
