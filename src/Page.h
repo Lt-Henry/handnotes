@@ -38,11 +38,19 @@ namespace handnotes
 		A5
 	};
 	
+	enum class PageType
+	{
+		Plain,
+		Dotted,
+		Squared,
+		Ruled
+	};
+	
 	class Page
 	{
 		public:
 		
-		Page(PageFormat format);
+		Page(PageFormat format, PageType type);
 		~Page();
 		
 		BPicture* Draw(BView* view);
@@ -50,6 +58,7 @@ namespace handnotes
 		protected:
 		
 		PageFormat format;
+		PageType type;
 		
 		double dpi;
 		double dpmm;

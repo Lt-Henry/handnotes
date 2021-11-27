@@ -45,7 +45,7 @@ vector<PageData> pageInfo = {
 	{PageFormat::A5,148.0,210.0}
 };
 
-Page::Page(PageFormat format) : format(format), picture(nullptr), dpi(96.0)
+Page::Page(PageFormat format, PageType type) : format(format), type(type),picture(nullptr), dpi(96.0)
 {
 	dpmm = dpi/25.4;
 	
