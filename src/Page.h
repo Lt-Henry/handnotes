@@ -25,6 +25,8 @@ SOFTWARE.
 #ifndef HAND_PAGE
 #define HAND_PAGE
 
+#include "Object.h"
+
 #include <View.h>
 #include <Picture.h>
 
@@ -46,7 +48,7 @@ namespace handnotes
 		Ruled
 	};
 	
-	class Page
+	class Page: public Object
 	{
 		public:
 		

@@ -42,7 +42,7 @@ HandView::HandView(BRect frame)
 	cursor_default = new BCursor(B_CURSOR_ID_SYSTEM_DEFAULT);
 	cursor_grab = new BCursor(B_CURSOR_ID_GRABBING);
 	
-	page = new handnotes::Page(PageFormat::A4);
+	page = new handnotes::Page(PageFormat::A4, PageType::Dotted);
 }
 
 HandView::~HandView()

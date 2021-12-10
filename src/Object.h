@@ -22,26 +22,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_PATH
-#define HAND_PATH
+#ifndef HAND_OBJECT
+#define HAND_OBJECT
 
-#include "Object.h"
-
-#include <Point.h>
-#include <View.h>
-
-#include <vector>
+#include <SupportDefs.h>
 
 namespace handnotes
 {
-	class Path: public Object
+	class Object
 	{
 		public:
-		rgb_color color;
-		float width;
-		std::vector<BPoint> vertices;
 		
-		Path(std::vector<BPoint>& nodes, rgb_color color, float width);
+		Object(uint64 type) : fType(type){}
+		virtual ~Object(){};
+		
+		uint64 Type()
+		{
+			return fType;
+		}
+		
+		protected:
+		
+		uint64 fType;
 	};
 }
+
 #endif

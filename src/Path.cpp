@@ -27,6 +27,8 @@ SOFTWARE.
 #include <cmath>
 #include <iostream>
 
+using namespace handnotes;
+
 using namespace std;
 
 static float dot(BPoint &a,BPoint& b)
@@ -73,7 +75,7 @@ static void ramer(vector<BPoint>& nodes, vector<int>& valids,int start,int end)
 }
 
 Path::Path(vector<BPoint>& nodes, rgb_color color, float width) :
-	color(color), width(width)
+	Object('PATH'), color(color), width(width)
 {
 	if (nodes.size()<3) {
 		vertices = nodes;
