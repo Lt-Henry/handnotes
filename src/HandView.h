@@ -72,7 +72,7 @@ class HandView : public BView
 	
 	BPoint start;
 	std::vector<BPoint> outline;
-	std::vector<Path> paths;
+	std::vector<handnotes::Path> paths;
 	
 	handnotes::Page* page;
 	
