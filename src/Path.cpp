@@ -96,3 +96,13 @@ Path::Path(vector<BPoint>& nodes, rgb_color color, float width) :
 	clog<<"source: "<<nodes.size()<<endl;
 	clog<<"ramer: "<<vertices.size()<<endl;
 }
+
+void Path::Draw(BView* view)
+{
+	view->SetLineMode(B_ROUND_CAP,B_BUTT_JOIN);
+	view->SetDrawingMode(B_OP_ALPHA);
+	
+	view->SetHighColor(color);
+	view->SetPenSize(width);
+	view->StrokePolygon(vertices.data(),vertices.size(),false);
+}

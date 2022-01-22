@@ -55,7 +55,7 @@ namespace handnotes
 		Page(PageFormat format, PageType type);
 		~Page();
 		
-		BPicture* Draw(BView* view);
+		void Draw(BView* view) override;
 		
 		protected:
 		

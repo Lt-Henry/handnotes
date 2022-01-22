@@ -66,50 +66,55 @@ Page::~Page()
 	}
 }
 
-BPicture* Page::Draw(BView* view)
+void Page::Draw(BView* view)
 {
-	if (picture) {
-		return picture;
-	}
 
-	view->BeginPicture(new BPicture);
+	if (!picture) {
+		view->BeginPicture(new BPicture);
 
-	double width_px = width * dpmm;
-	double height_px = height * dpmm;
-	
-	clog<<"page width "<< width<< " mm"<<endl;
-	clog<<"page height "<< height<< " mm"<<endl;
-	clog<<"pxiels: "<<width_px<<"x"<<height_px<<endl;
-	
-	rgb_color bg = {250,250,250,255};
-	rgb_color fg = {0,0,0,0};
-	
-	view->SetHighColor(bg);
-	view->FillRect(BRect(0,0,width_px,height_px));
-	view->SetHighColor(fg);
-	view->StrokeRect(BRect(0,0,width_px,height_px));
-	
-	int dots_w = 1.0 + ((width*0.90)/5.0);
-	int dots_h = 1.0 + ((height*0.90)/5.0);
-	double dot_x = 0.5 * (width - ((dots_w-1) * 5.0));
-	double dot_y = 0.5 * (height - ((dots_h-1) * 5.0));
-	
-	clog<<"dots "<<dots_w<<","<<dots_h<<endl;
-	clog<<"90%:"<<width*0.90<<endl;
-	clog<<"5%:"<<dot_x<<endl;
-	
-	for (int i=0;i<dots_w;i++) {
-		dot_y = 0.5 * (height - ((dots_h-1) * 5.0));;
-		for (int j=0;j<dots_h;j++) {
-			view->SetHighColor({200,200,200,255});
-			view->FillEllipse(BPoint(dot_x*dpmm,dot_y*dpmm),0.5,0.5);
-			
-			dot_y+=5.0;
+		double width_px = width * dpmm;
+		double height_px = height * dpmm;
+		
+		clog<<"page width "<< width<< " mm"<<endl;
+		clog<<"page height "<< height<< " mm"<<endl;
+		clog<<"pxiels: "<<width_px<<"x"<<height_px<<endl;
+		
+		rgb_color bg = {250,250,250,255};
+		rgb_color fg = {0,0,0,0};
+		
+		view->SetHighColor(bg);
+		view->FillRect(BRect(0,0,width_px,height_px));
+		view->SetHighColor(fg);
+		view->StrokeRect(BRect(0,0,width_px,height_px));
+		
+		int dots_w = 1.0 + ((width*0.90)/5.0);
+		int dots_h = 1.0 + ((height*0.90)/5.0);
+		double dot_x = 0.5 * (width - ((dots_w-1) * 5.0));
+		double dot_y = 0.5 * (height - ((dots_h-1) * 5.0));
+		
+		clog<<"dots "<<dots_w<<","<<dots_h<<endl;
+		clog<<"90%:"<<width*0.90<<endl;
+		clog<<"5%:"<<dot_x<<endl;
+		
+		for (int i=0;i<dots_w;i++) {
+			dot_y = 0.5 * (height - ((dots_h-1) * 5.0));;
+			for (int j=0;j<dots_h;j++) {
+				view->SetHighColor({200,200,200,255});
+				view->FillEllipse(BPoint(dot_x*dpmm,dot_y*dpmm),0.5,0.5);
+				
+				dot_y+=5.0;
+			}
+			dot_x+=5.0;
 		}
-		dot_x+=5.0;
-	}
 
-	picture = view->EndPicture();
+		picture = view->EndPicture();
+	}
 	
-	return picture;
+	view->DrawPicture(picture);
+	
+	for (Object* child : fChildren) {
+		child->Draw(view);
+	}
+	
+	return;
 }

@@ -26,6 +26,9 @@ SOFTWARE.
 #define HAND_OBJECT
 
 #include <SupportDefs.h>
+#include <View.h>
+
+#include <vector>
 
 namespace handnotes
 {
@@ -41,9 +44,24 @@ namespace handnotes
 			return fType;
 		}
 		
+		uint64 Id()
+		{
+			return fId;
+		}
+		
+		void Add(Object* child)
+		{
+			fChildren.push_back(child);
+		}
+		
+		virtual void Draw(BView* view) {};
+		
 		protected:
 		
 		uint64 fType;
+		uint64 fId;
+		
+		std::vector<Object*> fChildren;
 	};
 }
 

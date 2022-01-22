@@ -124,11 +124,12 @@ void HandView::MouseUp(BPoint where)
 		action = Action::None;
 		switch (tool) {
 			case Tool::Pencil:
-				paths.push_back(Path(outline,{94,129,172,128},1.5f));
+				page->Add(new Path(outline,{94,129,172,128},1.5f));
+				
 			break;
 			
 			case Tool::Highlighter:
-				paths.push_back(Path(outline,{255,117,0,64},12.0f));
+				page->Add(new Path(outline,{255,117,0,64},12.0f));
 			break;
 		}
 		outline.clear();
@@ -205,23 +206,7 @@ void HandView::Draw(BRect updateRect)
 	ScaleBy(scale,scale);
 	TranslateBy(ox,oy);
 	
-	DrawPicture(page->Draw(this));
-	
-	SetLineMode(B_ROUND_CAP,B_BUTT_JOIN);
-	SetDrawingMode(B_OP_ALPHA);
-	
-	for (Path& path : paths) {
-
-		SetHighColor(path.color);
-		SetPenSize(path.width);
-		StrokePolygon(path.vertices.data(),path.vertices.size(),false);
-		/*
-		for (BPoint& point : path.vertices) {
-			SetHighColor({200,0,0,255});
-			FillEllipse(point,0.5,0.5);
-		}
-		*/
-	}
+	page->Draw(this);
 	
 	if (action == Action::Draw) {
 		switch (tool) {
