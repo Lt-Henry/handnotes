@@ -177,8 +177,6 @@ void HandView::KeyDown(const char* bytes, int32 numBytes)
 			break;
 			
 			case 'z':
-			//TODO: simple undo mechanism
-				paths.pop_back();
 				Invalidate();
 			break;
 			

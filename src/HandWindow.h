@@ -37,7 +37,8 @@ class HandWindow : public BWindow
 	HandWindow();
 	~HandWindow();
 	
-	virtual bool QuitRequested();
+	virtual bool QuitRequested() override;
+	void MessageReceived(BMessage* message) override;
 	
 	protected:
 	

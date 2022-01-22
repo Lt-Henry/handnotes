@@ -24,11 +24,30 @@ SOFTWARE.
 
 #include "HandWindow.h"
 
+#include <Menu.h>
+#include <MenuBar.h>
+#include <MenuItem.h>
 #include <Application.h>
 
 HandWindow::HandWindow()
 : BWindow(BRect(100, 100, 100 + 720, 100 + 512), "HandNotes", B_TITLED_WINDOW, 0)
 {
+
+	BMenuBar* menu = new BMenuBar(BRect(0, 0, Bounds().Width(), 22), "menubar");
+	BMenu* menuFile = new BMenu("File");
+	
+	menu->AddItem(menuFile);
+	
+	menuFile->AddItem(new BMenuItem("New",new BMessage('HNNW')));
+	menuFile->AddItem(new BMenuItem("Open",new BMessage('HNLD')));
+	menuFile->AddItem(new BMenuItem("Save",new BMessage('HNSV')));
+	menuFile->AddItem(new BMenuItem("Quit",new BMessage('HNQT')));
+	
+	AddChild(menu);
+	view = new HandView(BRect(0,23,100,100));
+	AddChild(view);
+
+	/*
 	htoolbar = new BGroupView();
 	htoolbar->ResizeTo(Bounds().Width(),36);
 	htoolbar->SetResizingMode(B_FOLLOW_LEFT_RIGHT);
@@ -42,7 +61,7 @@ HandWindow::HandWindow()
 	rtoolbar->ResizeTo(36,view->Bounds().Height());
 	rtoolbar->SetResizingMode(B_FOLLOW_V_CENTER | B_FOLLOW_RIGHT);
 	view->AddChild(rtoolbar);
-	
+	*/
 }
 
 HandWindow::~HandWindow()
@@ -53,4 +72,29 @@ bool HandWindow::QuitRequested()
 {
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
+}
+
+void HandWindow::MessageReceived(BMessage* message)
+{
+	switch (message->what) {
+	
+		//new
+		case 'HNNW':
+		break;
+		
+		//load file
+		case 'HNLD':
+		break;
+		
+		//save file
+		case 'HNSV':
+		break;
+		
+		case 'HNQT':
+			be_app->PostMessage(B_QUIT_REQUESTED);
+		break;
+		
+		default:
+		BWindow::MessageReceived(message);
+	}
 }
