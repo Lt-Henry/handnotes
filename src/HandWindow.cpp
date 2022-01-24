@@ -28,7 +28,7 @@ SOFTWARE.
 #include <Menu.h>
 #include <MenuBar.h>
 #include <MenuItem.h>
-//#include <Path.h>
+#include <Path.h>
 #include <Entry.h>
 #include <Directory.h>
 #include <File.h>
