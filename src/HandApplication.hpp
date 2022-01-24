@@ -22,30 +22,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_WINDOW
-#define HAND_WINDOW
+#ifndef HAND_APP
+#define HAND_APP
 
-#include "HandView.h"
+#include "HandWindow.hpp"
 
-#include <Window.h>
-#include <GroupView.h>
+#include <Application.h>
 
-class HandWindow : public BWindow
+#define APP_SIGNATURE "application/x-vnd.handnotes"
+
+class HandApplication : public BApplication 
 {
 	public:
 	
-	HandWindow();
-	~HandWindow();
-	
-	virtual bool QuitRequested() override;
-	void MessageReceived(BMessage* message) override;
+	HandApplication();
+	virtual void ReadyToRun();
 	
 	protected:
 	
-	BGroupView* htoolbar;
-	BGroupView* rtoolbar;
-	
-	HandView* view;
+	HandWindow* window;
 };
+
 
 #endif

@@ -22,61 +22,54 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_VIEW
-#define HAND_VIEW
+#ifndef HAND_PAGE
+#define HAND_PAGE
 
-#include "Path.h"
-#include "Page.h"
+#include "Object.hpp"
 
 #include <View.h>
-#include <Cursor.h>
+#include <Picture.h>
 
-#include <vector>
-
-enum class Action
+namespace handnotes
 {
-	None,
-	Draw,
-	Drag
-};
-
-enum class Tool
-{
-	Pencil,
-	Highlighter
-};
-
-class HandView : public BView
-{
-	public:
-
-	HandView(BRect frame);
-	~HandView();
-
-	virtual void AttachedToWindow(void);
-	virtual void MessageReceived(BMessage* message);
-	virtual void FrameResized(float width, float height);
-	virtual void MouseDown(BPoint point);
-	virtual void MouseUp(BPoint point);
-	virtual void MouseMoved(BPoint point, uint32 transit,const BMessage* message);
-	virtual void KeyDown(const char* bytes, int32 numBytes);
-	virtual void Draw(BRect updateRect);
+	enum class PageFormat
+	{
+		A3,
+		A4,
+		A4Landscape,
+		A5
+	};
 	
-	protected:
+	enum class PageType
+	{
+		Plain,
+		Dotted,
+		Squared,
+		Ruled
+	};
+	
+	class Page: public Object
+	{
+		public:
+		
+		Page(PageFormat format, PageType type);
+		~Page();
+		
+		void Draw(BView* view) override;
+		
+		protected:
+		
+		PageFormat format;
+		PageType type;
+		
+		double dpi;
+		double dpmm;
+		
+		double width;
+		double height;
+		
+		BPicture* picture;
+	};
+}
 
-	double scale;
-	float ox,oy;
-	
-	Action action;
-	Tool tool;
-	
-	BPoint start;
-	std::vector<BPoint> outline;
-	std::vector<handnotes::Path> paths;
-	
-	handnotes::Page* page;
-	
-	BCursor* cursor_default;
-	BCursor* cursor_grab;
-};
 #endif

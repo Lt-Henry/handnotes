@@ -22,28 +22,61 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_PATH
-#define HAND_PATH
+#ifndef HAND_VIEW
+#define HAND_VIEW
 
-#include "Object.h"
+#include "Path.hpp"
+#include "Page.hpp"
 
-#include <Point.h>
 #include <View.h>
+#include <Cursor.h>
 
 #include <vector>
 
-namespace handnotes
+enum class Action
 {
-	class Path: public Object
-	{
-		public:
-		rgb_color color;
-		float width;
-		std::vector<BPoint> vertices;
-		
-		Path(std::vector<BPoint>& nodes, rgb_color color, float width);
-		
-		void Draw(BView* view) override;
-	};
-}
+	None,
+	Draw,
+	Drag
+};
+
+enum class Tool
+{
+	Pencil,
+	Highlighter
+};
+
+class HandView : public BView
+{
+	public:
+
+	HandView(BRect frame);
+	~HandView();
+
+	virtual void AttachedToWindow(void);
+	virtual void MessageReceived(BMessage* message);
+	virtual void FrameResized(float width, float height);
+	virtual void MouseDown(BPoint point);
+	virtual void MouseUp(BPoint point);
+	virtual void MouseMoved(BPoint point, uint32 transit,const BMessage* message);
+	virtual void KeyDown(const char* bytes, int32 numBytes);
+	virtual void Draw(BRect updateRect);
+	
+	protected:
+
+	double scale;
+	float ox,oy;
+	
+	Action action;
+	Tool tool;
+	
+	BPoint start;
+	std::vector<BPoint> outline;
+	std::vector<handnotes::Path> paths;
+	
+	handnotes::Page* page;
+	
+	BCursor* cursor_default;
+	BCursor* cursor_grab;
+};
 #endif

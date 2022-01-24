@@ -22,54 +22,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_PAGE
-#define HAND_PAGE
+#ifndef HAND_WINDOW
+#define HAND_WINDOW
 
-#include "Object.h"
+#include "HandView.hpp"
 
-#include <View.h>
-#include <Picture.h>
+#include <Window.h>
+#include <GroupView.h>
+#include <FilePanel.h>
 
-namespace handnotes
+class HandWindow : public BWindow
 {
-	enum class PageFormat
-	{
-		A3,
-		A4,
-		A4Landscape,
-		A5
-	};
+	public:
 	
-	enum class PageType
-	{
-		Plain,
-		Dotted,
-		Squared,
-		Ruled
-	};
+	HandWindow();
+	~HandWindow();
 	
-	class Page: public Object
-	{
-		public:
-		
-		Page(PageFormat format, PageType type);
-		~Page();
-		
-		void Draw(BView* view) override;
-		
-		protected:
-		
-		PageFormat format;
-		PageType type;
-		
-		double dpi;
-		double dpmm;
-		
-		double width;
-		double height;
-		
-		BPicture* picture;
-	};
-}
+	virtual bool QuitRequested() override;
+	void MessageReceived(BMessage* message) override;
+	
+	protected:
+	
+	BGroupView* htoolbar;
+	BGroupView* rtoolbar;
+	
+	HandView* view;
+	
+	BFilePanel* openPanel;
+	BFilePanel* savePanel;
+};
 
 #endif

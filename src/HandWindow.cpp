@@ -22,12 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "HandWindow.h"
+#include "HandWindow.hpp"
 
+#include <Application.h>
 #include <Menu.h>
 #include <MenuBar.h>
 #include <MenuItem.h>
-#include <Application.h>
+//#include <Path.h>
+#include <Entry.h>
+#include <Directory.h>
+#include <File.h>
+#include <OS.h>
+
+#include <iostream>
+
+using namespace std;
 
 HandWindow::HandWindow()
 : BWindow(BRect(100, 100, 100 + 720, 100 + 512), "HandNotes", B_TITLED_WINDOW, 0)
@@ -46,6 +55,20 @@ HandWindow::HandWindow()
 	AddChild(menu);
 	view = new HandView(BRect(0,23,100,100));
 	AddChild(view);
+	
+	BMessage *saveMsg = new BMessage(B_SAVE_REQUESTED);
+	
+	savePanel = new BFilePanel(B_SAVE_PANEL, NULL, NULL,
+		B_FILE_NODE, false, saveMsg, NULL, true, true);
+	
+	savePanel->SetTarget(this);
+	
+	BMessage *openMsg = new BMessage(B_REFS_RECEIVED);
+	
+	openPanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL,
+		B_FILE_NODE, false, openMsg, NULL, true, true);
+	
+	openPanel->SetTarget(this);
 
 	/*
 	htoolbar = new BGroupView();
@@ -76,6 +99,7 @@ bool HandWindow::QuitRequested()
 
 void HandWindow::MessageReceived(BMessage* message)
 {
+
 	switch (message->what) {
 	
 		//new
@@ -84,14 +108,38 @@ void HandWindow::MessageReceived(BMessage* message)
 		
 		//load file
 		case 'HNLD':
+			openPanel->Show();
 		break;
 		
 		//save file
-		case 'HNSV':
+		case 'HNSV': {
+			savePanel->Show();
+		}
 		break;
 		
 		case 'HNQT':
 			be_app->PostMessage(B_QUIT_REQUESTED);
+		break;
+		
+		case B_SAVE_REQUESTED: {
+			
+			entry_ref ref;
+			if (message->FindRef("directory", 0, &ref) == B_OK) {
+				BPath path;
+				BEntry entry = BEntry(&ref);
+				
+				entry.GetPath(&path);
+				BString filename = message->FindString("name");
+				path.Append(filename);
+				
+				clog<<"save to "<<path.Path()<<endl;
+			}
+			
+		}
+		break;
+		
+		case B_REFS_RECEIVED:
+			clog<<"open requested!"<<endl;
 		break;
 		
 		default:

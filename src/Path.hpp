@@ -22,26 +22,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_APP
-#define HAND_APP
+#ifndef HAND_PATH
+#define HAND_PATH
 
-#include "HandWindow.h"
+#include "Object.hpp"
 
-#include <Application.h>
+#include <Point.h>
+#include <View.h>
 
-#define APP_SIGNATURE "application/x-vnd.handnotes"
+#include <vector>
 
-class HandApplication : public BApplication 
+namespace handnotes
 {
-	public:
-	
-	HandApplication();
-	virtual void ReadyToRun();
-	
-	protected:
-	
-	HandWindow* window;
-};
-
-
+	class Path: public Object
+	{
+		public:
+		rgb_color color;
+		float width;
+		std::vector<BPoint> vertices;
+		
+		Path(std::vector<BPoint>& nodes, rgb_color color, float width);
+		
+		void Draw(BView* view) override;
+	};
+}
 #endif
