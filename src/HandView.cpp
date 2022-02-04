@@ -29,6 +29,7 @@ SOFTWARE.
 #include <iostream>
 
 using namespace handnotes;
+
 using namespace std;
 
 HandView::HandView(BRect frame)

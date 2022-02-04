@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2021 Enrique Medina Gremaldos <quiqueiii@gmail.com>
+Copyright (c) 2022 Enrique Medina Gremaldos <quiqueiii@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_APP
-#define HAND_APP
-
-#include "HandWindow.hpp"
+#include "ExportWindow.hpp"
 
 #include <Application.h>
 
-#define APP_SIGNATURE "application/x-vnd.handnotes"
+#include <iostream>
 
-namespace handnotes
+using namespace handnotes;
+
+using namespace std;
+
+ExportWindow::ExportWindow()
+: BWindow(BRect(100, 100, 100 + 200, 100 + 100), "Export", B_FLOATING_WINDOW_LOOK, B_FLOATING_ALL_WINDOW_FEEL,0)
 {
-	class HandApplication : public BApplication 
-	{
-		public:
-		
-		HandApplication();
-		virtual void ReadyToRun();
-		
-		protected:
-		
-		HandWindow* window;
-	};
+	clog<<"ExportWindow"<<endl;
+	
 }
 
-#endif
+ExportWindow::~ExportWindow()
+{
+}
+
+bool ExportWindow::QuitRequested()
+{
+	be_app->PostMessage(B_QUIT_REQUESTED);
+	return true;
+}
+
+void ExportWindow::MessageReceived(BMessage* message)
+{
+	switch (message->what) {
+	
+		default:
+		clog<<"message: "<<message->what<<endl;
+		BWindow::MessageReceived(message);
+	}
+}
+
+void ExportWindow::WindowActivated(bool active)
+{
+	clog<<"activated:"<<active<<endl;
+	
+}

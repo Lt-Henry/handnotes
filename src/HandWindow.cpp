@@ -36,6 +36,8 @@ SOFTWARE.
 
 #include <iostream>
 
+using namespace handnotes;
+
 using namespace std;
 
 HandWindow::HandWindow()
@@ -50,26 +52,35 @@ HandWindow::HandWindow()
 	menuFile->AddItem(new BMenuItem("New",new BMessage('HNNW')));
 	menuFile->AddItem(new BMenuItem("Open",new BMessage('HNLD')));
 	menuFile->AddItem(new BMenuItem("Save",new BMessage('HNSV')));
+	menuFile->AddItem(new BMenuItem("Export",new BMessage('HNEX')));
 	menuFile->AddItem(new BMenuItem("Quit",new BMessage('HNQT')));
 	
 	AddChild(menu);
 	view = new HandView(BRect(0,23,100,100));
 	AddChild(view);
 	
-	BMessage *saveMsg = new BMessage(B_SAVE_REQUESTED);
+	BMessage *saveMsg = new BMessage('HNSR');
 	
 	savePanel = new BFilePanel(B_SAVE_PANEL, NULL, NULL,
 		B_FILE_NODE, false, saveMsg, NULL, true, true);
 	
 	savePanel->SetTarget(this);
 	
-	BMessage *openMsg = new BMessage(B_REFS_RECEIVED);
+	BMessage *openMsg = new BMessage('HNOR');
 	
 	openPanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL,
 		B_FILE_NODE, false, openMsg, NULL, true, true);
 	
 	openPanel->SetTarget(this);
 
+	BMessage *exportMsg = new BMessage('HNER');
+	
+	exportPanel = new BFilePanel(B_SAVE_PANEL, NULL, NULL,
+		B_FILE_NODE, false, exportMsg, NULL, true, true);
+	
+	exportPanel->SetTarget(this);
+	
+	//exportWindow = new ExportWindow();
 	/*
 	htoolbar = new BGroupView();
 	htoolbar->ResizeTo(Bounds().Width(),36);
@@ -112,16 +123,21 @@ void HandWindow::MessageReceived(BMessage* message)
 		break;
 		
 		//save file
-		case 'HNSV': {
+		case 'HNSV': 
 			savePanel->Show();
-		}
+		break;
+		
+		case 'HNEX': {
+				ExportWindow* exportWindow = new ExportWindow();
+				exportWindow->Show();
+			}
 		break;
 		
 		case 'HNQT':
 			be_app->PostMessage(B_QUIT_REQUESTED);
 		break;
 		
-		case B_SAVE_REQUESTED: {
+		case 'HNSR': {
 			
 			entry_ref ref;
 			if (message->FindRef("directory", 0, &ref) == B_OK) {
@@ -138,8 +154,12 @@ void HandWindow::MessageReceived(BMessage* message)
 		}
 		break;
 		
-		case B_REFS_RECEIVED:
+		case 'HNOR':
 			clog<<"open requested!"<<endl;
+		break;
+		
+		case 'HNER':
+
 		break;
 		
 		default:

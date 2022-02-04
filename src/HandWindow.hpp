@@ -26,30 +26,36 @@ SOFTWARE.
 #define HAND_WINDOW
 
 #include "HandView.hpp"
+#include "ExportWindow.hpp"
 
 #include <Window.h>
 #include <GroupView.h>
 #include <FilePanel.h>
 
-class HandWindow : public BWindow
+namespace handnotes
 {
-	public:
-	
-	HandWindow();
-	~HandWindow();
-	
-	virtual bool QuitRequested() override;
-	void MessageReceived(BMessage* message) override;
-	
-	protected:
-	
-	BGroupView* htoolbar;
-	BGroupView* rtoolbar;
-	
-	HandView* view;
-	
-	BFilePanel* openPanel;
-	BFilePanel* savePanel;
-};
-
+	class HandWindow : public BWindow
+	{
+		public:
+		
+		HandWindow();
+		~HandWindow();
+		
+		virtual bool QuitRequested() override;
+		void MessageReceived(BMessage* message) override;
+		
+		protected:
+		
+		BGroupView* htoolbar;
+		BGroupView* rtoolbar;
+		
+		HandView* view;
+		
+		BFilePanel* openPanel;
+		BFilePanel* savePanel;
+		BFilePanel* exportPanel;
+		
+		
+	};
+}
 #endif

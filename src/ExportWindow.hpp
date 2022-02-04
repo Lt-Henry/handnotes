@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2021 Enrique Medina Gremaldos <quiqueiii@gmail.com>
+Copyright (c) 2022 Enrique Medina Gremaldos <quiqueiii@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_APP
-#define HAND_APP
+#ifndef EXPORT_WINDOW
+#define EXPORT_WINDOW
 
-#include "HandWindow.hpp"
-
-#include <Application.h>
-
-#define APP_SIGNATURE "application/x-vnd.handnotes"
+#include <Window.h>
 
 namespace handnotes
 {
-	class HandApplication : public BApplication 
+	class ExportWindow : public BWindow
 	{
 		public:
 		
-		HandApplication();
-		virtual void ReadyToRun();
+		ExportWindow();
+		~ExportWindow();
+		
+		virtual bool QuitRequested() override;
+		void MessageReceived(BMessage* message) override;
+		void WindowActivated(bool active) override;
 		
 		protected:
 		
-		HandWindow* window;
 	};
 }
-
 #endif

@@ -33,50 +33,54 @@ SOFTWARE.
 
 #include <vector>
 
-enum class Action
+namespace handnotes
 {
-	None,
-	Draw,
-	Drag
-};
+	enum class Action
+	{
+		None,
+		Draw,
+		Drag
+	};
 
-enum class Tool
-{
-	Pencil,
-	Highlighter
-};
+	enum class Tool
+	{
+		Pencil,
+		Highlighter
+	};
 
-class HandView : public BView
-{
-	public:
+	class HandView : public BView
+	{
+		public:
 
-	HandView(BRect frame);
-	~HandView();
+		HandView(BRect frame);
+		~HandView();
 
-	virtual void AttachedToWindow(void);
-	virtual void MessageReceived(BMessage* message);
-	virtual void FrameResized(float width, float height);
-	virtual void MouseDown(BPoint point);
-	virtual void MouseUp(BPoint point);
-	virtual void MouseMoved(BPoint point, uint32 transit,const BMessage* message);
-	virtual void KeyDown(const char* bytes, int32 numBytes);
-	virtual void Draw(BRect updateRect);
-	
-	protected:
+		virtual void AttachedToWindow(void);
+		virtual void MessageReceived(BMessage* message);
+		virtual void FrameResized(float width, float height);
+		virtual void MouseDown(BPoint point);
+		virtual void MouseUp(BPoint point);
+		virtual void MouseMoved(BPoint point, uint32 transit,const BMessage* message);
+		virtual void KeyDown(const char* bytes, int32 numBytes);
+		virtual void Draw(BRect updateRect);
+		
+		protected:
 
-	double scale;
-	float ox,oy;
-	
-	Action action;
-	Tool tool;
-	
-	BPoint start;
-	std::vector<BPoint> outline;
-	std::vector<handnotes::Path> paths;
-	
-	handnotes::Page* page;
-	
-	BCursor* cursor_default;
-	BCursor* cursor_grab;
-};
+		double scale;
+		float ox,oy;
+		
+		Action action;
+		Tool tool;
+		
+		BPoint start;
+		std::vector<BPoint> outline;
+		std::vector<handnotes::Path> paths;
+		
+		handnotes::Page* page;
+		
+		BCursor* cursor_default;
+		BCursor* cursor_grab;
+	};
+
+}
 #endif

@@ -26,6 +26,8 @@ SOFTWARE.
 
 #include <iostream>
 
+using namespace handnotes;
+
 using namespace std;
 
 HandApplication::HandApplication(): BApplication(APP_SIGNATURE)
