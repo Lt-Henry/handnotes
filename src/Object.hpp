@@ -36,15 +36,10 @@ namespace handnotes
 	{
 		public:
 		
-		Object(uint64 type) : fType(type){}
+		Object(uint32 id) : fId(id){}
 		virtual ~Object(){};
 		
-		uint64 Type()
-		{
-			return fType;
-		}
-		
-		uint64 Id()
+		uint32 Id()
 		{
 			return fId;
 		}
@@ -54,12 +49,16 @@ namespace handnotes
 			fChildren.push_back(child);
 		}
 		
+		std::vector<Object*> & Children()
+		{
+			return fChildren;
+		}
+		
 		virtual void Draw(BView* view) {};
 		
 		protected:
 		
-		uint64 fType;
-		uint64 fId;
+		uint32 fId;
 		
 		std::vector<Object*> fChildren;
 	};

@@ -22,67 +22,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_VIEW
-#define HAND_VIEW
+#ifndef HAND_DISK
+#define HAND_DISK
 
-#include "Path.hpp"
 #include "Page.hpp"
+#include "Path.hpp"
 
-#include <View.h>
-#include <Cursor.h>
-
-#include <vector>
+#include <Entry.h>
 
 namespace handnotes
 {
-	enum class Action
+	namespace io
 	{
-		None,
-		Draw,
-		Drag
-	};
-
-	enum class Tool
-	{
-		Pencil,
-		Highlighter
-	};
-
-	class HandView : public BView
-	{
-		public:
-
-		HandView(BRect frame);
-		~HandView();
-
-		virtual void AttachedToWindow(void);
-		virtual void MessageReceived(BMessage* message);
-		virtual void FrameResized(float width, float height);
-		virtual void MouseDown(BPoint point);
-		virtual void MouseUp(BPoint point);
-		virtual void MouseMoved(BPoint point, uint32 transit,const BMessage* message);
-		virtual void KeyDown(const char* bytes, int32 numBytes);
-		virtual void Draw(BRect updateRect);
+		Page* LoadPage(const BEntry* entry);
 		
-		handnotes::Page* page;
-		
-		protected:
-
-		double scale;
-		float ox,oy;
-		
-		Action action;
-		Tool tool;
-		
-		BPoint start;
-		std::vector<BPoint> outline;
-		std::vector<handnotes::Path> paths;
-		
-		
-		
-		BCursor* cursor_default;
-		BCursor* cursor_grab;
-	};
-
+		void SavePage(const BEntry* entry,Page* page);
+	}
 }
+
 #endif

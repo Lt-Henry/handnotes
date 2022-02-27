@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include "HandWindow.hpp"
+#include "Disk.hpp"
 
 #include <Application.h>
 #include <Menu.h>
@@ -149,6 +150,9 @@ void HandWindow::MessageReceived(BMessage* message)
 				path.Append(filename);
 				
 				clog<<"save to "<<path.Path()<<endl;
+				
+				BEntry dest(path.Path());
+				io::SavePage(&dest,view->page);
 			}
 			
 		}

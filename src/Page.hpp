@@ -55,6 +55,31 @@ namespace handnotes
 		Page(PageFormat format, PageType type);
 		~Page();
 		
+		PageFormat Format()
+		{
+			return format;
+		}
+		
+		PageType Type()
+		{
+			return type;
+		}
+		
+		double Width()
+		{
+			return width;
+		}
+		
+		double Height()
+		{
+			return height;
+		}
+		
+		double DPI()
+		{
+			return dpi;
+		}
+		
 		void Draw(BView* view) override;
 		
 		protected:
