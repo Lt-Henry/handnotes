@@ -36,7 +36,56 @@ using namespace std;
 Page* handnotes::io::LoadPage(const BEntry* entry)
 {
 	//ToDo
-	return nullptr;
+	if (!entry) {
+		cerr<<"null entry"<<endl;
+		return nullptr;
+	}
+	
+	BFile file(entry,B_READ_ONLY);
+	
+	if (file.IsReadable()) {
+		cerr<<"Can not read file"<<endl;
+		return nullptr;
+	}
+	
+	uint32 u32[4];
+	float f32[4];
+	double f64[4];
+	
+	file.Read(&u32[0],4);
+	file.Read(&u32[1],4);
+	
+	if (u32[0]!='HNDN' or u32[1]!='V000') {
+		cerr<<"Invalid header"<<endl;
+		return nullptr;
+	}
+	
+	file.Read(&u32[0],4);
+	file.Read(&u32[1],4);
+	file.Read(&u32[2],4);
+	
+	if (u32[0]!='PAGE') {
+		cerr<<"unexpected ID"<<endl;
+		return nullptr;
+	}
+	
+	// dpi
+	file.Read(&f64[0],8);
+	
+	Page*page = new Page(static_cast<PageFormat>(u32[1]),static_cast<PageType>(u32[2]));
+	
+	read_object:
+	if (file.Read(&u32[0],4)>0) {
+	
+		switch (u32[0]) {
+			case 'PATH': {
+			}
+			break;
+			
+		}
+	}
+	
+	return page;
 }
 
 void handnotes::io::SavePage(const BEntry* entry,Page* page)
@@ -63,12 +112,6 @@ void handnotes::io::SavePage(const BEntry* entry,Page* page)
 	
 	data[0] = static_cast<int32>(page->Type());
 	file.Write(&data[0],4);
-	
-	f64 = page->Width();
-	file.Write(&f64,8);
-	
-	f64 = page->Height();
-	file.Write(&f64,8);
 	
 	f64 = page->DPI();
 	file.Write(&f64,8);
