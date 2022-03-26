@@ -158,8 +158,17 @@ void HandWindow::MessageReceived(BMessage* message)
 		}
 		break;
 		
-		case 'HNOR':
-			clog<<"open requested!"<<endl;
+		case 'HNOR': {
+				clog<<"open requested!"<<endl;
+				
+				entry_ref ref;
+				message->FindRef("refs", 0, &ref);
+				BEntry entry(&ref, true);
+				
+				Page* page = io::LoadPage(&entry);
+				//TODO: fix this hack
+				view->page = page;
+			}
 		break;
 		
 		case 'HNER':

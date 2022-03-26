@@ -74,27 +74,32 @@ static void ramer(vector<BPoint>& nodes, vector<int>& valids,int start,int end)
 	}
 }
 
-Path::Path(vector<BPoint>& nodes, rgb_color color, float width) :
+Path::Path(vector<BPoint>& nodes, rgb_color color, float width, bool simplify) :
 	Object('PATH'), color(color), width(width)
 {
-	if (nodes.size()<3) {
-		vertices = nodes;
+	if (simplify) {
+		if (nodes.size()<3) {
+			vertices = nodes;
+		}
+		else {
+		
+			vector<int> valids;
+			
+			valids.push_back(0);
+			ramer(nodes,valids,0,nodes.size()-1);
+			valids.push_back(nodes.size()-1);
+			
+			for (int n:valids) {
+				vertices.push_back(nodes[n]);
+			}
+		}
+		
+		clog<<"source: "<<nodes.size()<<endl;
+		clog<<"ramer: "<<vertices.size()<<endl;
 	}
 	else {
-	
-		vector<int> valids;
-		
-		valids.push_back(0);
-		ramer(nodes,valids,0,nodes.size()-1);
-		valids.push_back(nodes.size()-1);
-		
-		for (int n:valids) {
-			vertices.push_back(nodes[n]);
-		}
+		vertices = nodes;
 	}
-	
-	clog<<"source: "<<nodes.size()<<endl;
-	clog<<"ramer: "<<vertices.size()<<endl;
 }
 
 void Path::Draw(BView* view)

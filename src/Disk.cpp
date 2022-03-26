@@ -79,6 +79,22 @@ Page* handnotes::io::LoadPage(const BEntry* entry)
 	
 		switch (u32[0]) {
 			case 'PATH': {
+				file.Read(&f32[0],4); // width
+				rgb_color color;
+				file.Read(&color,sizeof(rgb_color));
+				file.Read(&u32[1],4); //num vertices
+				
+				std::vector<BPoint> nodes;
+				
+				for (uint32 vn=0;vn<u32[1];vn++) {
+					file.Read(&f32[1],4);
+					file.Read(&f32[2],4);
+					
+					BPoint point(f32[1],f32[2]);
+					nodes.push_back(point);
+				}
+				Path* path = new Path(nodes,color,f32[0],false);
+				page->Add(path);
 			}
 			break;
 			

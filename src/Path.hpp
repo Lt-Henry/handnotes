@@ -41,7 +41,7 @@ namespace handnotes
 		float width;
 		std::vector<BPoint> vertices;
 		
-		Path(std::vector<BPoint>& nodes, rgb_color color, float width);
+		Path(std::vector<BPoint>& nodes, rgb_color color, float width, bool simplify=true);
 		
 		void Draw(BView* view) override;
 	};
