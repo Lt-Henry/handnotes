@@ -43,7 +43,7 @@ Page* handnotes::io::LoadPage(const BEntry* entry)
 	
 	BFile file(entry,B_READ_ONLY);
 	
-	if (file.IsReadable()) {
+	if (!file.IsReadable()) {
 		cerr<<"Can not read file"<<endl;
 		return nullptr;
 	}
@@ -100,8 +100,12 @@ Page* handnotes::io::LoadPage(const BEntry* entry)
 			
 		}
 	}
+	else {
+		return page;
+	}
 	
-	return page;
+	goto read_object;
+	
 }
 
 void handnotes::io::SavePage(const BEntry* entry,Page* page)

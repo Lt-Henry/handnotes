@@ -164,10 +164,14 @@ void HandWindow::MessageReceived(BMessage* message)
 				entry_ref ref;
 				message->FindRef("refs", 0, &ref);
 				BEntry entry(&ref, true);
-				
+				BPath path;
+				entry.GetPath(&path);
+				clog<<"path:"<<path.Path()<<endl;
 				Page* page = io::LoadPage(&entry);
 				//TODO: fix this hack
-				view->page = page;
+				if (page) {
+					view->page = page;
+				}
 			}
 		break;
 		
