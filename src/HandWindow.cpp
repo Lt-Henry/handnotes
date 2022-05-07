@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "HandNotes.hpp"
 #include "HandWindow.hpp"
 #include "Disk.hpp"
 
@@ -50,11 +51,11 @@ HandWindow::HandWindow()
 	
 	menu->AddItem(menuFile);
 	
-	menuFile->AddItem(new BMenuItem("New",new BMessage('HNNW')));
-	menuFile->AddItem(new BMenuItem("Open",new BMessage('HNLD')));
-	menuFile->AddItem(new BMenuItem("Save",new BMessage('HNSV')));
-	menuFile->AddItem(new BMenuItem("Export",new BMessage('HNEX')));
-	menuFile->AddItem(new BMenuItem("Quit",new BMessage('HNQT')));
+	menuFile->AddItem(new BMenuItem("New",new BMessage(Message::MenuNew)));
+	menuFile->AddItem(new BMenuItem("Open",new BMessage(Message::MenuOpen)));
+	menuFile->AddItem(new BMenuItem("Save",new BMessage(Message::MenuSave)));
+	menuFile->AddItem(new BMenuItem("Export",new BMessage(Message::MenuExport)));
+	menuFile->AddItem(new BMenuItem("Quit",new BMessage(Message::MenuQuit)));
 	
 	AddChild(menu);
 	view = new HandView(BRect(0,23,100,100));
@@ -115,30 +116,30 @@ void HandWindow::MessageReceived(BMessage* message)
 	switch (message->what) {
 	
 		//new
-		case 'HNNW':
+		case Message::MenuNew:
 		break;
 		
-		//load file
-		case 'HNLD':
+		//open file
+		case Message::MenuOpen:
 			openPanel->Show();
 		break;
 		
 		//save file
-		case 'HNSV': 
+		case Message::MenuSave: 
 			savePanel->Show();
 		break;
 		
-		case 'HNEX': {
+		case Message::MenuExport: {
 				ExportWindow* exportWindow = new ExportWindow();
 				exportWindow->Show();
 			}
 		break;
 		
-		case 'HNQT':
+		case Message::MenuQuit:
 			be_app->PostMessage(B_QUIT_REQUESTED);
 		break;
 		
-		case 'HNSR': {
+		case Message::SaveRequest: {
 			
 			entry_ref ref;
 			if (message->FindRef("directory", 0, &ref) == B_OK) {
@@ -158,7 +159,7 @@ void HandWindow::MessageReceived(BMessage* message)
 		}
 		break;
 		
-		case 'HNOR': {
+		case Message::OpenRequest: {
 				clog<<"open requested!"<<endl;
 				
 				entry_ref ref;
@@ -175,7 +176,7 @@ void HandWindow::MessageReceived(BMessage* message)
 			}
 		break;
 		
-		case 'HNER':
+		case Message::ExportRequest:
 
 		break;
 		
