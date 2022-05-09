@@ -26,6 +26,7 @@ SOFTWARE.
 #define EXPORT_WINDOW
 
 #include <Window.h>
+#include <TextView.h>
 
 namespace handnotes
 {
@@ -42,6 +43,7 @@ namespace handnotes
 		
 		protected:
 		
+		BTextView* dpiText;
 	};
 }
 #endif

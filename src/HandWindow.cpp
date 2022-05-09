@@ -61,21 +61,21 @@ HandWindow::HandWindow()
 	view = new HandView(BRect(0,23,100,100));
 	AddChild(view);
 	
-	BMessage *saveMsg = new BMessage('HNSR');
+	BMessage *saveMsg = new BMessage(Message::SaveRequest);
 	
 	savePanel = new BFilePanel(B_SAVE_PANEL, NULL, NULL,
 		B_FILE_NODE, false, saveMsg, NULL, true, true);
 	
 	savePanel->SetTarget(this);
 	
-	BMessage *openMsg = new BMessage('HNOR');
+	BMessage *openMsg = new BMessage(Message::OpenRequest);
 	
 	openPanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL,
 		B_FILE_NODE, false, openMsg, NULL, true, true);
 	
 	openPanel->SetTarget(this);
 
-	BMessage *exportMsg = new BMessage('HNER');
+	BMessage *exportMsg = new BMessage(Message::ExportRequest);
 	
 	exportPanel = new BFilePanel(B_SAVE_PANEL, NULL, NULL,
 		B_FILE_NODE, false, exportMsg, NULL, true, true);

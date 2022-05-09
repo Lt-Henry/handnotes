@@ -25,6 +25,8 @@ SOFTWARE.
 #include "ExportWindow.hpp"
 
 #include <Application.h>
+#include <LayoutBuilder.h>
+#include <Button.h>
 
 #include <iostream>
 
@@ -37,6 +39,15 @@ ExportWindow::ExportWindow()
 {
 	clog<<"ExportWindow"<<endl;
 	
+	BButton* btnExport = new BButton("Export");
+	dpiText = new BTextView("");
+	dpiText->SetText("96");
+	
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
+		.Add(dpiText)
+		.Add(btnExport);
+	//GetLayout()->Add(btnExport);
+
 }
 
 ExportWindow::~ExportWindow()
@@ -45,6 +56,7 @@ ExportWindow::~ExportWindow()
 
 bool ExportWindow::QuitRequested()
 {
+	//TODO: not close the whole app
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
 }
