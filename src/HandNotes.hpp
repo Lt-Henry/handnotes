@@ -37,8 +37,9 @@ namespace handnotes
 		
 		SaveRequest,
 		OpenRequest,
-		ExportRequest
+		ExportRequest,
 		
+		DpiChanged
 	};
 }
 #endif

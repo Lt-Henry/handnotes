@@ -27,6 +27,7 @@ SOFTWARE.
 
 #include <Window.h>
 #include <TextView.h>
+#include <TextControl.h>
 
 namespace handnotes
 {
@@ -44,6 +45,9 @@ namespace handnotes
 		protected:
 		
 		BTextView* dpiText;
+		BTextControl* dpiControl;
+		
+		float dpi;
 	};
 }
 #endif
