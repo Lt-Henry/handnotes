@@ -35,7 +35,7 @@ namespace handnotes
 	{
 		public:
 		
-		ExportWindow();
+		ExportWindow(BWindow* parent);
 		~ExportWindow();
 		
 		virtual bool QuitRequested() override;
@@ -44,6 +44,8 @@ namespace handnotes
 		
 		protected:
 		
+		BWindow* parentWindow;
+
 		BTextView* dpiText;
 		BTextControl* dpiControl;
 		

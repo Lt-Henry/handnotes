@@ -27,6 +27,7 @@ SOFTWARE.
 #include "Disk.hpp"
 
 #include <Application.h>
+#include <Bitmap.h>
 #include <Menu.h>
 #include <MenuBar.h>
 #include <MenuItem.h>
@@ -130,7 +131,7 @@ void HandWindow::MessageReceived(BMessage* message)
 		break;
 		
 		case Message::MenuExport: {
-				ExportWindow* exportWindow = new ExportWindow();
+				exportWindow = new ExportWindow(this);
 				exportWindow->Show();
 			}
 		break;
@@ -175,9 +176,27 @@ void HandWindow::MessageReceived(BMessage* message)
 				}
 			}
 		break;
-		
-		case Message::ExportRequest:
 
+		case Message::ExportRequest: {
+			clog<<"HandWindow received an export message"<<endl;
+			float dpi = message->GetFloat("dpi",96);
+			clog<<"DPI:"<<dpi<<endl;
+			BBitmap* bitmap = new BBitmap(BRect(0,0,view->page->Width(),view->page->Height()),B_RGBA32);
+			BView* eView = new BView(BRect(0,0,view->page->Width(),view->page->Height()),"export",B_FOLLOW_NONE,B_WILL_DRAW);
+			bitmap->AddChild(eView);
+			
+			//eView->LockLooper();
+			rgb_color fg = {127,0,0,0};
+			eView->SetHighColor(fg);
+			eView->FillRect(eView->Bounds());
+			//view->page->Draw(eView);
+			//eView->Sync();
+			//eView->UnlockLooper();
+		}
+		break;
+		
+		case Message::ExportClose:
+			
 		break;
 		
 		default:

@@ -35,8 +35,8 @@ using namespace handnotes;
 
 using namespace std;
 
-ExportWindow::ExportWindow()
-: BWindow(BRect(100, 100, 100 + 200, 100 + 100), "Export", B_FLOATING_WINDOW_LOOK, B_FLOATING_ALL_WINDOW_FEEL,0)
+ExportWindow::ExportWindow(BWindow* parent)
+: BWindow(BRect(100, 100, 100 + 200, 100 + 100), "Export", B_FLOATING_WINDOW_LOOK, B_FLOATING_ALL_WINDOW_FEEL,0) , parentWindow(parent)
 {
 	dpi = 96;
 	clog<<"ExportWindow"<<endl;
@@ -58,7 +58,8 @@ ExportWindow::~ExportWindow()
 bool ExportWindow::QuitRequested()
 {
 	//TODO: not close the whole app
-	be_app->PostMessage(B_QUIT_REQUESTED);
+	//be_app->PostMessage(B_QUIT_REQUESTED);
+	parentWindow->PostMessage(Message::ExportClose);
 	return true;
 }
 
@@ -77,8 +78,14 @@ void ExportWindow::MessageReceived(BMessage* message)
 			}
 		break;
 
-		case Message::ExportRequest:
+		case Message::ExportRequest: {
 			clog<<"Export to "<<dpi<<endl;
+			BMessage* msg = new BMessage(Message::ExportRequest);
+			
+			msg->AddFloat("dpi",dpi);
+			BMessenger target(parentWindow);
+			target.SendMessage(msg);
+		}
 		break;
 
 		default:

@@ -55,6 +55,8 @@ namespace handnotes
 		BFilePanel* savePanel;
 		BFilePanel* exportPanel;
 		
+		ExportWindow* exportWindow;
+		
 		
 	};
 }
