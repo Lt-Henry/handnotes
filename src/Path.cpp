@@ -105,7 +105,7 @@ Path::Path(vector<BPoint>& nodes, rgb_color color, float width, bool simplify) :
 void Path::Draw(BView* view)
 {
 	view->SetLineMode(B_ROUND_CAP,B_BUTT_JOIN);
-	view->SetDrawingMode(B_OP_ALPHA);
+	//view->SetDrawingMode(B_OP_ALPHA);
 	
 	view->SetHighColor(color);
 	view->SetPenSize(width);

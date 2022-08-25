@@ -27,6 +27,8 @@ SOFTWARE.
 #include "Disk.hpp"
 
 #include <Application.h>
+#include <TranslatorRoster.h>
+#include <BitmapStream.h>
 #include <Bitmap.h>
 #include <Menu.h>
 #include <MenuBar.h>
@@ -181,17 +183,20 @@ void HandWindow::MessageReceived(BMessage* message)
 			clog<<"HandWindow received an export message"<<endl;
 			float dpi = message->GetFloat("dpi",96);
 			clog<<"DPI:"<<dpi<<endl;
-			BBitmap* bitmap = new BBitmap(BRect(0,0,view->page->Width(),view->page->Height()),B_RGBA32);
-			BView* eView = new BView(BRect(0,0,view->page->Width(),view->page->Height()),"export",B_FOLLOW_NONE,B_WILL_DRAW);
+			BBitmap* bitmap = new BBitmap(view->page->PixelBounds(96.0),B_RGBA32, true, true);
+			BView* eView = new BView(view->page->PixelBounds(96.0),"export",B_FOLLOW_NONE,B_WILL_DRAW);
 			bitmap->AddChild(eView);
 			
-			//eView->LockLooper();
-			rgb_color fg = {127,0,0,0};
-			eView->SetHighColor(fg);
-			eView->FillRect(eView->Bounds());
-			//view->page->Draw(eView);
-			//eView->Sync();
-			//eView->UnlockLooper();
+			eView->LockLooper();
+			view->page->Draw(eView);
+			eView->Sync();
+			eView->UnlockLooper();
+			BFile file("/boot/home/hnotes.png",B_WRITE_ONLY | B_CREATE_FILE);
+			BBitmapStream stream(bitmap);
+			BTranslatorRoster* roster = BTranslatorRoster::Default();
+			roster->Translate(&stream, NULL, NULL, &file, B_PNG_FORMAT, B_TRANSLATOR_BITMAP);
+			
+			stream.DetachBitmap(&bitmap);
 		}
 		break;
 		

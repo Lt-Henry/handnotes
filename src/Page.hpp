@@ -65,19 +65,30 @@ namespace handnotes
 			return type;
 		}
 		
-		double Width()
+		float Width()
 		{
 			return width;
 		}
 		
-		double Height()
+		float Height()
 		{
 			return height;
 		}
 		
-		double DPI()
+		BSize Size()
 		{
-			return dpi;
+			return BSize(width,height);
+		}
+		
+		BRect Bounds()
+		{
+			return BRect(0,0,width,height);
+		}
+		
+		BRect PixelBounds(float dpi)
+		{
+			float dpmm = dpi/25.4;
+			return BRect(0,0,dpmm * width, dpmm * height);
 		}
 		
 		void Draw(BView* view) override;
@@ -87,13 +98,9 @@ namespace handnotes
 		PageFormat format;
 		PageType type;
 		
-		double dpi;
-		double dpmm;
+		float width;
+		float height;
 		
-		double width;
-		double height;
-		
-		BPicture* picture;
 	};
 }
 

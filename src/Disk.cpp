@@ -133,7 +133,7 @@ void handnotes::io::SavePage(const BEntry* entry,Page* page)
 	data[0] = static_cast<int32>(page->Type());
 	file.Write(&data[0],4);
 	
-	f64 = page->DPI();
+	f64 = 96.0;
 	file.Write(&f64,8);
 	
 	for (Object* obj:page->Children()) {

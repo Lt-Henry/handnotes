@@ -34,8 +34,8 @@ typedef struct
 {
 	PageFormat format;
 	// size in mm
-	double width;
-	double height;
+	float width;
+	float height;
 	
 } PageData;
 
@@ -46,9 +46,8 @@ vector<PageData> pageInfo = {
 	{PageFormat::A5,148.0,210.0}
 };
 
-Page::Page(PageFormat format, PageType type) : Object('PAGE'), format(format), type(type),picture(nullptr), dpi(96.0)
+Page::Page(PageFormat format, PageType type) : Object('PAGE'), format(format), type(type)
 {
-	dpmm = dpi/25.4;
 	
 	for (PageData& info : pageInfo) {
 		if (info.format==format) {
@@ -61,56 +60,47 @@ Page::Page(PageFormat format, PageType type) : Object('PAGE'), format(format), t
 
 Page::~Page()
 {
-	if (picture) {
-		delete picture;
-	}
+
 }
 
 void Page::Draw(BView* view)
 {
+	float dpmm = 96.0/25.4;
 
-	if (!picture) {
-		view->BeginPicture(new BPicture);
-
-		double width_px = width * dpmm;
-		double height_px = height * dpmm;
-		
-		clog<<"page width "<< width<< " mm"<<endl;
-		clog<<"page height "<< height<< " mm"<<endl;
-		clog<<"pxiels: "<<width_px<<"x"<<height_px<<endl;
-		
-		rgb_color bg = {250,250,250,255};
-		rgb_color fg = {0,0,0,0};
-		
-		view->SetHighColor(bg);
-		view->FillRect(BRect(0,0,width_px,height_px));
-		view->SetHighColor(fg);
-		view->StrokeRect(BRect(0,0,width_px,height_px));
-		
-		int dots_w = 1.0 + ((width*0.90)/5.0);
-		int dots_h = 1.0 + ((height*0.90)/5.0);
-		double dot_x = 0.5 * (width - ((dots_w-1) * 5.0));
-		double dot_y = 0.5 * (height - ((dots_h-1) * 5.0));
-		
-		clog<<"dots "<<dots_w<<","<<dots_h<<endl;
-		clog<<"90%:"<<width*0.90<<endl;
-		clog<<"5%:"<<dot_x<<endl;
-		
-		for (int i=0;i<dots_w;i++) {
-			dot_y = 0.5 * (height - ((dots_h-1) * 5.0));;
-			for (int j=0;j<dots_h;j++) {
-				view->SetHighColor({200,200,200,255});
-				view->FillEllipse(BPoint(dot_x*dpmm,dot_y*dpmm),0.5,0.5);
-				
-				dot_y+=5.0;
-			}
-			dot_x+=5.0;
-		}
-
-		picture = view->EndPicture();
-	}
+	double width_px = width * dpmm;
+	double height_px = height * dpmm;
 	
-	view->DrawPicture(picture);
+	clog<<"page width "<< width<< " mm"<<endl;
+	clog<<"page height "<< height<< " mm"<<endl;
+	clog<<"pixels: "<<width_px<<"x"<<height_px<<endl;
+	
+	rgb_color bg = {250,250,250,255};
+	rgb_color fg = {0,0,0,0};
+	
+	view->SetHighColor(bg);
+	view->FillRect(BRect(0,0,width_px,height_px));
+	view->SetHighColor(fg);
+	view->StrokeRect(BRect(0,0,width_px,height_px));
+	
+	int dots_w = 1.0 + ((width*0.90)/5.0);
+	int dots_h = 1.0 + ((height*0.90)/5.0);
+	double dot_x = 0.5 * (width - ((dots_w-1) * 5.0));
+	double dot_y = 0.5 * (height - ((dots_h-1) * 5.0));
+	
+	clog<<"dots "<<dots_w<<","<<dots_h<<endl;
+	clog<<"90%:"<<width*0.90<<endl;
+	clog<<"5%:"<<dot_x<<endl;
+	
+	for (int i=0;i<dots_w;i++) {
+		dot_y = 0.5 * (height - ((dots_h-1) * 5.0));;
+		for (int j=0;j<dots_h;j++) {
+			view->SetHighColor({200,200,200,255});
+			view->FillEllipse(BPoint(dot_x*dpmm,dot_y*dpmm),0.5,0.5);
+			
+			dot_y+=5.0;
+		}
+		dot_x+=5.0;
+	}
 	
 	for (Object* child : fChildren) {
 		child->Draw(view);
