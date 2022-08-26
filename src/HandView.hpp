@@ -68,6 +68,7 @@ namespace handnotes
 		
 		protected:
 
+		double dpi;
 		double scale;
 		float ox,oy;
 		

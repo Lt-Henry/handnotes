@@ -108,6 +108,6 @@ void Path::Draw(BView* view)
 	//view->SetDrawingMode(B_OP_ALPHA);
 	
 	view->SetHighColor(color);
-	view->SetPenSize(width);
+	view->SetPenSize(width/2.0f);
 	view->StrokePolygon(vertices.data(),vertices.size(),false);
 }

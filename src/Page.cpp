@@ -56,6 +56,11 @@ Page::Page(PageFormat format, PageType type) : Object('PAGE'), format(format), t
 			break;
 		}
 	}
+	
+	pal = { {250,250,250,255},
+			{0,0,0,0},
+			{200,200,200,255}
+	};
 }
 
 Page::~Page()
@@ -65,37 +70,23 @@ Page::~Page()
 
 void Page::Draw(BView* view)
 {
-	float dpmm = 96.0/25.4;
-
-	double width_px = width * dpmm;
-	double height_px = height * dpmm;
 	
-	clog<<"page width "<< width<< " mm"<<endl;
-	clog<<"page height "<< height<< " mm"<<endl;
-	clog<<"pixels: "<<width_px<<"x"<<height_px<<endl;
-	
-	rgb_color bg = {250,250,250,255};
-	rgb_color fg = {0,0,0,0};
-	
-	view->SetHighColor(bg);
-	view->FillRect(BRect(0,0,width_px,height_px));
-	view->SetHighColor(fg);
-	view->StrokeRect(BRect(0,0,width_px,height_px));
+	view->SetHighColor(pal.background);
+	view->FillRect(BRect(0,0,width,height));
+	view->SetHighColor(pal.border);
+	view->SetPenSize(0.5f);
+	view->StrokeRect(BRect(0,0,width,height));
 	
 	int dots_w = 1.0 + ((width*0.90)/5.0);
 	int dots_h = 1.0 + ((height*0.90)/5.0);
 	double dot_x = 0.5 * (width - ((dots_w-1) * 5.0));
 	double dot_y = 0.5 * (height - ((dots_h-1) * 5.0));
-	
-	clog<<"dots "<<dots_w<<","<<dots_h<<endl;
-	clog<<"90%:"<<width*0.90<<endl;
-	clog<<"5%:"<<dot_x<<endl;
-	
+
 	for (int i=0;i<dots_w;i++) {
 		dot_y = 0.5 * (height - ((dots_h-1) * 5.0));;
 		for (int j=0;j<dots_h;j++) {
-			view->SetHighColor({200,200,200,255});
-			view->FillEllipse(BPoint(dot_x*dpmm,dot_y*dpmm),0.5,0.5);
+			view->SetHighColor(pal.dots);
+			view->FillEllipse(BPoint(dot_x,dot_y),0.2,0.2);
 			
 			dot_y+=5.0;
 		}

@@ -25,6 +25,8 @@ SOFTWARE.
 #ifndef HAND_NOTES
 #define HAND_NOTES
 
+#include <GraphicsDefs.h>
+
 namespace handnotes
 {
 	enum Message : unsigned int
@@ -41,6 +43,13 @@ namespace handnotes
 		ExportClose,
 		
 		DpiChanged
+	};
+	
+	struct Palette
+	{
+		rgb_color background;
+		rgb_color border;
+		rgb_color dots;
 	};
 }
 #endif

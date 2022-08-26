@@ -25,6 +25,7 @@ SOFTWARE.
 #ifndef HAND_PAGE
 #define HAND_PAGE
 
+#include "HandNotes.hpp"
 #include "Object.hpp"
 
 #include <View.h>
@@ -94,6 +95,7 @@ namespace handnotes
 		void Draw(BView* view) override;
 		
 		protected:
+		Palette pal;
 		
 		PageFormat format;
 		PageType type;
