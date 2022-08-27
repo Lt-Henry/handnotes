@@ -53,7 +53,7 @@ namespace handnotes
 	{
 		public:
 		
-		Page(PageFormat format, PageType type);
+		Page(PageFormat format, PageType type,float dpi);
 		~Page();
 		
 		PageFormat Format()
@@ -102,6 +102,8 @@ namespace handnotes
 		
 		float width;
 		float height;
+		
+		float dpi;
 		
 	};
 }

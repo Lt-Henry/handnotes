@@ -72,7 +72,7 @@ Page* handnotes::io::LoadPage(const BEntry* entry)
 	// dpi
 	file.Read(&f64[0],8);
 	
-	Page*page = new Page(static_cast<PageFormat>(u32[1]),static_cast<PageType>(u32[2]));
+	Page*page = new Page(static_cast<PageFormat>(u32[1]),static_cast<PageType>(u32[2]),f64[0]);
 	
 	read_object:
 	if (file.Read(&u32[0],4)>0) {

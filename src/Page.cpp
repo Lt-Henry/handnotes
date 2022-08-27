@@ -46,7 +46,7 @@ vector<PageData> pageInfo = {
 	{PageFormat::A5,148.0,210.0}
 };
 
-Page::Page(PageFormat format, PageType type) : Object('PAGE'), format(format), type(type)
+Page::Page(PageFormat format, PageType type,float dpi) : Object('PAGE'), format(format), type(type), dpi(dpi)
 {
 	
 	for (PageData& info : pageInfo) {
@@ -70,12 +70,16 @@ Page::~Page()
 
 void Page::Draw(BView* view)
 {
+	float dpmm = dpi/25.4f;
+	
+	float width_px = width * dpmm;
+	float height_px = height * dpmm;
 	
 	view->SetHighColor(pal.background);
-	view->FillRect(BRect(0,0,width,height));
+	view->FillRect(BRect(0,0,width_px,height_px));
 	view->SetHighColor(pal.border);
 	view->SetPenSize(0.5f);
-	view->StrokeRect(BRect(0,0,width,height));
+	view->StrokeRect(BRect(0,0,width_px,height_px));
 	
 	int dots_w = 1.0 + ((width*0.90)/5.0);
 	int dots_h = 1.0 + ((height*0.90)/5.0);
@@ -86,7 +90,7 @@ void Page::Draw(BView* view)
 		dot_y = 0.5 * (height - ((dots_h-1) * 5.0));;
 		for (int j=0;j<dots_h;j++) {
 			view->SetHighColor(pal.dots);
-			view->FillEllipse(BPoint(dot_x,dot_y),0.2,0.2);
+			view->FillEllipse(BPoint(dot_x*dpmm,dot_y*dpmm),0.5*dpmm,0.5*dpmm);
 			
 			dot_y+=5.0;
 		}

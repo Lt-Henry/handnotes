@@ -33,7 +33,7 @@ using namespace handnotes;
 using namespace std;
 
 HandView::HandView(BRect frame)
-: BView(frame, "HandView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW)
+: BView(frame, "HandView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_SUBPIXEL_PRECISE)
 {
 	dpi = 96.0;
 	scale = 1.0f;
@@ -44,7 +44,7 @@ HandView::HandView(BRect frame)
 	cursor_default = new BCursor(B_CURSOR_ID_SYSTEM_DEFAULT);
 	cursor_grab = new BCursor(B_CURSOR_ID_GRABBING);
 	
-	page = new handnotes::Page(PageFormat::A4, PageType::Dotted);
+	page = new handnotes::Page(PageFormat::A4, PageType::Dotted, dpi);
 }
 
 HandView::~HandView()
@@ -71,8 +71,8 @@ void HandView::MessageReceived(BMessage* message)
 					scale=0.1;
 				}
 				
-				if (scale>3.0) {
-					scale=3.0;
+				if (scale>5.0) {
+					scale=5.0;
 				}
 			Invalidate();
 			}
@@ -99,11 +99,9 @@ void HandView::MouseDown(BPoint where)
 
 	if ((buttons & B_PRIMARY_MOUSE_BUTTON) != 0) {
 		action = Action::Draw;
-		float sx = (dpi / 25.4) * scale;
-		float sy = (dpi / 25.4) * scale;
 		
-		where.x = where.x / sx;
-		where.y = where.y / sy;
+		where.x = where.x / scale;
+		where.y = where.y / scale;
 		where.x = where.x - ox;
 		where.y = where.y - oy;
 		outline.push_back(where);
@@ -113,11 +111,9 @@ void HandView::MouseDown(BPoint where)
 	if ((buttons & B_SECONDARY_MOUSE_BUTTON) != 0) {
 		SetViewCursor(cursor_grab);
 		action = Action::Drag;
-		float sx = (dpi / 25.4) * scale;
-		float sy = (dpi / 25.4) * scale;
 		
-		where.x = where.x / sx;
-		where.y = where.y / sy;
+		where.x = where.x / scale;
+		where.y = where.y / scale;
 		where.x = where.x - ox;
 		where.y = where.y - oy;
 		start = where;
@@ -131,12 +127,12 @@ void HandView::MouseUp(BPoint where)
 		action = Action::None;
 		switch (tool) {
 			case Tool::Pencil:
-				page->Add(new Path(outline,{94,129,172,128},0.4f));
+				page->Add(new Path(outline,{94,129,172,230},1.0f));
 				
 			break;
 			
 			case Tool::Highlighter:
-				page->Add(new Path(outline,{255,117,0,64},8.0f));
+				page->Add(new Path(outline,{255,117,0,128},8.0f));
 			break;
 		}
 		outline.clear();
@@ -154,11 +150,11 @@ void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 {
 
 	if (action==Action::Draw) {
-		float sx = (dpi / 25.4) * scale;
-		float sy = (dpi / 25.4) * scale;
 		
-		where.x = where.x / sx;
-		where.y = where.y / sy;
+		where.x = where.x / scale;
+		where.y = where.y / scale;
+
+		
 		where.x = where.x - ox;
 		where.y = where.y - oy;
 
@@ -167,11 +163,9 @@ void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 	}
 	
 	if (action == Action::Drag) {
-		float sx = (dpi / 25.4) * scale;
-		float sy = (dpi / 25.4) * scale;
 		
-		where.x = where.x / sx;
-		where.y = where.y / sy;
+		where.x = where.x / scale;
+		where.y = where.y / scale;
 		BPoint tmp = where-start;
 		ox = tmp.x;
 		oy = tmp.y;
@@ -207,13 +201,9 @@ void HandView::KeyDown(const char* bytes, int32 numBytes)
 
 void HandView::Draw(BRect updateRect)
 {
-	
 	BAffineTransform mat;
 	SetTransform(mat);
-	double sx,sy;
-	sx = (dpi/25.4) * scale;
-	sy = (dpi/25.4) * scale;
-	ScaleBy(sx,sy);
+	ScaleBy(scale,scale);
 	TranslateBy(ox,oy);
 	
 	page->Draw(this);
@@ -221,14 +211,14 @@ void HandView::Draw(BRect updateRect)
 	if (action == Action::Draw) {
 		switch (tool) {
 			case Tool::Pencil:
-				SetHighColor({94,129,172,128});
-				SetPenSize(0.4f/2.0);
+				SetHighColor({94,129,172,230});
+				SetPenSize(1.0);
 				StrokePolygon(outline.data(),outline.size(),false);
 			break;
 			
 			case Tool::Highlighter:
-				SetHighColor({255,117,0,64});
-				SetPenSize(8.0f/2.0);
+				SetHighColor({255,117,0,128});
+				SetPenSize(8.0f);
 				StrokePolygon(outline.data(),outline.size(),false);
 			break;
 		}

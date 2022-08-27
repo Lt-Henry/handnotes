@@ -43,7 +43,7 @@ static float norm(BPoint &a)
 
 static void ramer(vector<BPoint>& nodes, vector<int>& valids,int start,int end)
 {
-	float epsilon=0.3f;
+	float epsilon=0.5f;
 	int worst=start;
 	float current=0.0f;
 	
@@ -104,10 +104,18 @@ Path::Path(vector<BPoint>& nodes, rgb_color color, float width, bool simplify) :
 
 void Path::Draw(BView* view)
 {
-	view->SetLineMode(B_ROUND_CAP,B_BUTT_JOIN);
-	//view->SetDrawingMode(B_OP_ALPHA);
+	view->SetLineMode(B_ROUND_CAP,B_SQUARE_JOIN);
+	view->SetDrawingMode(B_OP_ALPHA);
 	
 	view->SetHighColor(color);
-	view->SetPenSize(width/2.0f);
+	view->SetPenSize(width);
 	view->StrokePolygon(vertices.data(),vertices.size(),false);
+	
+	view->SetHighColor({0,0,0,255});
+	//view->SetPenSize(0.1f);
+	/*
+	for (BPoint& p:vertices) {
+		view->FillEllipse(p,0.1,0.1);
+	}
+	*/
 }
