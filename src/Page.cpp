@@ -81,20 +81,63 @@ void Page::Draw(BView* view)
 	view->SetPenSize(0.5f);
 	view->StrokeRect(BRect(0,0,width_px,height_px));
 	
-	int dots_w = 1.0 + ((width*0.90)/5.0);
-	int dots_h = 1.0 + ((height*0.90)/5.0);
-	double dot_x = 0.5 * (width - ((dots_w-1) * 5.0));
-	double dot_y = 0.5 * (height - ((dots_h-1) * 5.0));
+	switch (type) {
+		case PageType::Dotted: {
+			int dots_w = 1.0 + ((width*0.90)/5.0);
+			int dots_h = 1.0 + ((height*0.90)/5.0);
+			double dot_x = 0.5 * (width - ((dots_w-1) * 5.0));
+			double dot_y = 0.5 * (height - ((dots_h-1) * 5.0));
 
-	for (int i=0;i<dots_w;i++) {
-		dot_y = 0.5 * (height - ((dots_h-1) * 5.0));;
-		for (int j=0;j<dots_h;j++) {
-			view->SetHighColor(pal.dots);
-			view->FillEllipse(BPoint(dot_x*dpmm,dot_y*dpmm),0.5*dpmm,0.5*dpmm);
-			
-			dot_y+=5.0;
+			for (int i=0;i<dots_w;i++) {
+				dot_y = 0.5 * (height - ((dots_h-1) * 5.0));;
+				for (int j=0;j<dots_h;j++) {
+					view->SetHighColor(pal.dots);
+					view->FillEllipse(BPoint(dot_x*dpmm,dot_y*dpmm),0.5*dpmm,0.5*dpmm);
+					
+					dot_y+=5.0;
+				}
+				dot_x+=5.0;
+			}
 		}
-		dot_x+=5.0;
+		break;
+		
+		case PageType::Squared: {
+			int lines_w = 0.0 + ((width*0.90)/10.0);
+			int lines_h = 0.0 + ((height*0.90)/10.0);
+			double line_x = width*0.10;
+			double line_y = height*0.10;
+			
+			for (int j=0;j<lines_h;j++) {
+				view->SetHighColor(pal.dots);
+				view->MovePenTo(0.10*width*dpmm,line_y*dpmm);
+				view->StrokeLine(BPoint(0.90*width*dpmm,line_y*dpmm));
+				line_y+=10.0;
+			}
+			
+			for (int i=0;i<lines_w;i++) {
+				view->SetHighColor(pal.dots);
+				view->MovePenTo(line_x*dpmm,0.10*height*dpmm);
+				view->StrokeLine(BPoint(line_x*dpmm,0.90*height*dpmm));
+				line_x+=10.0;
+			}
+		}
+		break;
+		
+		case PageType::Ruled: {
+			int lines_h = 1.0 + ((height*0.90)/10.0);
+			double line_y = 0.5 * (height - ((lines_h-1) * 10.0));
+			
+			for (int j=0;j<lines_h;j++) {
+				view->SetHighColor(pal.dots);
+				view->MovePenTo(0.10*width*dpmm,line_y*dpmm);
+				view->StrokeLine(BPoint(0.90*width*dpmm,line_y*dpmm));
+				line_y+=10.0;
+			}
+		}
+		break;
+		
+		default:
+		break;
 	}
 	
 	for (Object* child : fChildren) {
