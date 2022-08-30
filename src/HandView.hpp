@@ -44,6 +44,12 @@ namespace handnotes
 
 	enum class Tool
 	{
+		FreeHand,
+		Ruler
+	};
+
+	enum class DrawingTool
+	{
 		Pencil,
 		Highlighter
 	};
@@ -73,13 +79,12 @@ namespace handnotes
 		float ox,oy;
 		
 		Action action;
+		DrawingTool drawingTool;
 		Tool tool;
 		
 		BPoint start;
 		std::vector<BPoint> outline;
 		std::vector<handnotes::Path> paths;
-		
-		
 		
 		BCursor* cursor_default;
 		BCursor* cursor_grab;

@@ -40,7 +40,9 @@ HandView::HandView(BRect frame)
 	ox = 0.0f;
 	oy = 0.0f;
 	action = Action::None;
-	tool = Tool::Pencil;
+	tool = Tool::FreeHand;
+	drawingTool = DrawingTool::Pencil;
+	
 	cursor_default = new BCursor(B_CURSOR_ID_SYSTEM_DEFAULT);
 	cursor_grab = new BCursor(B_CURSOR_ID_GRABBING);
 	
@@ -105,6 +107,11 @@ void HandView::MouseDown(BPoint where)
 		where.x = where.x - ox;
 		where.y = where.y - oy;
 		outline.push_back(where);
+		
+		if (tool == Tool::Ruler) {
+			outline.push_back(where);
+		}
+		
 		Invalidate();
 	}
 
@@ -125,13 +132,14 @@ void HandView::MouseUp(BPoint where)
 
 	if (action == Action::Draw) {
 		action = Action::None;
-		switch (tool) {
-			case Tool::Pencil:
+		
+		switch (drawingTool) {
+			case DrawingTool::Pencil:
 				page->Add(new Path(outline,{94,129,172,230},1.0f));
 				
 			break;
 			
-			case Tool::Highlighter:
+			case DrawingTool::Highlighter:
 				page->Add(new Path(outline,{255,117,0,128},8.0f));
 			break;
 		}
@@ -157,8 +165,17 @@ void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 		
 		where.x = where.x - ox;
 		where.y = where.y - oy;
+		
+		switch(tool) {
+			case Tool::FreeHand:
+				outline.push_back(where);
+			break;
+			
+			case Tool::Ruler:
+				outline[1] = where;
+			break;
+		}
 
-		outline.push_back(where);
 		Invalidate();
 	}
 	
@@ -188,13 +205,20 @@ void HandView::KeyDown(const char* bytes, int32 numBytes)
 			break;
 			
 			case '1':
-				tool = Tool::Pencil;
+				drawingTool = DrawingTool::Pencil;
 			break;
 
 			case '2':
-				tool = Tool::Highlighter;
+				drawingTool = DrawingTool::Highlighter;
 			break;
 			
+			case 'r':
+				tool = Tool::Ruler;
+			break;
+			
+			case 'f':
+				tool = Tool::FreeHand;
+			break;
 		}
 	}
 }
@@ -210,16 +234,27 @@ void HandView::Draw(BRect updateRect)
 	
 	if (action == Action::Draw) {
 		switch (tool) {
-			case Tool::Pencil:
-				SetHighColor({94,129,172,230});
-				SetPenSize(1.0);
-				StrokePolygon(outline.data(),outline.size(),false);
+			case Tool::FreeHand:
+				switch(drawingTool) {
+					case DrawingTool::Pencil:
+						SetHighColor({94,129,172,230});
+						SetPenSize(1.0);
+						StrokePolygon(outline.data(),outline.size(),false);
+					break;
+					
+					case DrawingTool::Highlighter:
+						SetHighColor({255,117,0,128});
+						SetPenSize(8.0f);
+						StrokePolygon(outline.data(),outline.size(),false);
+					break;
+				}
 			break;
 			
-			case Tool::Highlighter:
-				SetHighColor({255,117,0,128});
-				SetPenSize(8.0f);
-				StrokePolygon(outline.data(),outline.size(),false);
+			case Tool::Ruler:
+				SetHighColor({32,32,32,128});
+				SetPenSize(1.0f);
+				MovePenTo(outline[0]);
+				StrokeLine(outline[1]);
 			break;
 		}
 		
