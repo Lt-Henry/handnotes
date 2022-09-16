@@ -103,11 +103,18 @@ void Page::Draw(BView* view)
 		
 		case PageType::Squared: {
 			int lines_w = 0.0 + ((width*0.90)/10.0);
-			int lines_h = 0.0 + ((height*0.90)/10.0);
-			double line_x = width*0.10;
-			double line_y = height*0.10;
+			int lines_h = (height*0.90)/10.0;
+			double line_x = (width*0.10)/2.0;
+			double line_y = (height*0.10)/2.0;
 			
-			for (int j=0;j<lines_h;j++) {
+			BRect square;
+			
+			square.left = line_x * dpmm;
+			square.top = line_y * dpmm;
+			square.right = square.left + (0.9*width*dpmm);
+			square.bottom = square.top + (0.9*height*dpmm);
+			
+			for (int j=0;j<(lines_h+1);j++) {
 				view->SetHighColor(pal.dots);
 				view->MovePenTo(0.10*width*dpmm,line_y*dpmm);
 				view->StrokeLine(BPoint(0.90*width*dpmm,line_y*dpmm));
@@ -116,10 +123,13 @@ void Page::Draw(BView* view)
 			
 			for (int i=0;i<lines_w;i++) {
 				view->SetHighColor(pal.dots);
-				view->MovePenTo(line_x*dpmm,0.10*height*dpmm);
-				view->StrokeLine(BPoint(line_x*dpmm,0.90*height*dpmm));
+				//view->MovePenTo(line_x*dpmm,0.10*height*dpmm);
+				//view->StrokeLine(BPoint(line_x*dpmm,0.90*height*dpmm));
 				line_x+=10.0;
 			}
+			
+			view->SetPenSize(4);
+			view->StrokeRect(square);
 		}
 		break;
 		
