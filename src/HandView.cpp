@@ -195,9 +195,7 @@ void HandView::KeyDown(const char* bytes, int32 numBytes)
 	for (int32 n=0;n<numBytes;n++) {
 		switch(bytes[n]) {
 			case 'h':
-				ox=0;
-				oy=0;
-				Invalidate();
+				Home();
 			break;
 			
 			case 'z':
@@ -259,4 +257,27 @@ void HandView::Draw(BRect updateRect)
 		}
 		
 	}
+}
+
+void HandView::Home()
+{
+	ox=0;
+	oy=0;
+	Invalidate();
+}
+
+void HandView::ZoomIn()
+{
+	Invalidate();
+}
+
+void HandView::ZoomOut()
+{
+	Invalidate();
+}
+
+void HandView::NoZoom()
+{
+	scale = 1;
+	Invalidate();
 }

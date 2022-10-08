@@ -70,6 +70,11 @@ namespace handnotes
 		virtual void KeyDown(const char* bytes, int32 numBytes);
 		virtual void Draw(BRect updateRect);
 		
+		void Home();
+		void ZoomIn();
+		void ZoomOut();
+		void NoZoom();
+		
 		handnotes::Page* page;
 		
 		protected:

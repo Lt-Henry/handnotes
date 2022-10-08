@@ -42,7 +42,17 @@ namespace handnotes
 		ExportRequest,
 		ExportClose,
 		
-		DpiChanged
+		DpiChanged,
+		
+		MenuUndo,
+		MenuRedo,
+		
+		MenuHome,
+		MenuZoomIn,
+		MenuZoomOut,
+		MenuNoZoom,
+		MenuFitPage,
+		MenuFitDraw
 	};
 	
 	struct Palette

@@ -84,6 +84,21 @@ HandWindow::HandWindow()
 		B_FILE_NODE, false, exportMsg, NULL, true, true);
 	
 	exportPanel->SetTarget(this);
+
+	BMenu* menuEdit = new BMenu("Edit");
+	menu->AddItem(menuEdit);
+
+	menuEdit->AddItem(new BMenuItem("Un-do",new BMessage(Message::MenuUndo)));
+	menuEdit->AddItem(new BMenuItem("Re-do",new BMessage(Message::MenuRedo)));
+
+
+	BMenu* menuView = new BMenu("View");
+	menu->AddItem(menuView);
+
+	menuView->AddItem(new BMenuItem("Home",new BMessage(Message::MenuHome)));
+	menuView->AddItem(new BMenuItem("No zoom",new BMessage(Message::MenuNoZoom)));
+
+
 	
 	//exportWindow = new ExportWindow();
 	/*
@@ -202,6 +217,14 @@ void HandWindow::MessageReceived(BMessage* message)
 		
 		case Message::ExportClose:
 			
+		break;
+		
+		case Message::MenuHome:
+			view->Home();
+		break;
+		
+		case Message::MenuNoZoom:
+			view->NoZoom();
 		break;
 		
 		default:
