@@ -281,3 +281,16 @@ void HandView::NoZoom()
 	scale = 1;
 	Invalidate();
 }
+
+void HandView::ZoomFitPage()
+{
+	ox = 0;
+	oy = 0;
+	
+	float dpmm = dpi/25.4f;
+	
+	scale = Bounds().Height() / (page->Height()*dpmm);
+	clog<<"scale:"<<scale<<endl;
+	
+	Invalidate();
+}

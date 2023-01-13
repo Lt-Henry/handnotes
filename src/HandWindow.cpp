@@ -91,14 +91,21 @@ HandWindow::HandWindow()
 	menuEdit->AddItem(new BMenuItem("Un-do",new BMessage(Message::MenuUndo)));
 	menuEdit->AddItem(new BMenuItem("Re-do",new BMessage(Message::MenuRedo)));
 
-
 	BMenu* menuView = new BMenu("View");
 	menu->AddItem(menuView);
 
 	menuView->AddItem(new BMenuItem("Home",new BMessage(Message::MenuHome)));
 	menuView->AddItem(new BMenuItem("No zoom",new BMessage(Message::MenuNoZoom)));
+	menuView->AddItem(new BMenuItem("Zoom in",new BMessage(Message::MenuZoomIn)));
+	menuView->AddItem(new BMenuItem("Zoom out",new BMessage(Message::MenuZoomOut)));
+	menuView->AddItem(new BMenuItem("Fit page",new BMessage(Message::MenuFitPage)));
+	menuView->AddItem(new BMenuItem("Fit drawing",new BMessage(Message::MenuFitDrawing)));
 
-
+	BMenu* menuTool = new BMenu("Tool");
+	menu->AddItem(menuTool);
+	
+	menuTool->AddItem(new BMenuItem("Pen",new BMessage(Message::MenuPen)));
+	menuTool->AddItem(new BMenuItem("Highlighter",new BMessage(Message::MenuHighlighter)));
 	
 	//exportWindow = new ExportWindow();
 	/*
@@ -225,6 +232,18 @@ void HandWindow::MessageReceived(BMessage* message)
 		
 		case Message::MenuNoZoom:
 			view->NoZoom();
+		break;
+		
+		case Message::MenuZoomIn:
+			view->ZoomIn();
+		break;
+		
+		case Message::MenuZoomOut:
+			view->ZoomOut();
+		break;
+		
+		case Message::MenuFitPage:
+			view->ZoomFitPage();
 		break;
 		
 		default:

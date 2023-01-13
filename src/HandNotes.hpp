@@ -52,7 +52,10 @@ namespace handnotes
 		MenuZoomOut,
 		MenuNoZoom,
 		MenuFitPage,
-		MenuFitDraw
+		MenuFitDrawing,
+		
+		MenuPen,
+		MenuHighlighter
 	};
 	
 	struct Palette

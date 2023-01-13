@@ -74,6 +74,7 @@ namespace handnotes
 		void ZoomIn();
 		void ZoomOut();
 		void NoZoom();
+		void ZoomFitPage();
 		
 		handnotes::Page* page;
 		
