@@ -81,7 +81,7 @@ namespace handnotes
 			return BSize(width,height);
 		}
 		
-		BRect Bounds()
+		BRect Bounds() override
 		{
 			return BRect(0,0,width,height);
 		}

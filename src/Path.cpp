@@ -106,6 +106,13 @@ BRect Path::Bounds()
 {
 	BRect ret(0,0,0,0);
 	
+	if (vertices.size()>0) {
+		ret.left = vertices[0].x;
+		ret.right = ret.left;
+		ret.top = vertices[0].y;
+		ret.bottom = ret.top;
+	}
+	
 	for (BPoint& point : vertices) {
 		if (point.x < ret.left) {
 			ret.left = point.x;
@@ -119,6 +126,12 @@ BRect Path::Bounds()
 		if (point.y > ret.bottom) {
 			ret.bottom = point.y;
 		}
+	}
+	
+	for (Object* child : fChildren) {
+		BRect childBounds = child->Bounds();
+		
+		ret = ret | childBounds;
 	}
 	
 	return ret;

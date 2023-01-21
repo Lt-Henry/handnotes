@@ -302,5 +302,23 @@ void HandView::ZoomFitPage()
 
 void HandView::ZoomFitDrawing()
 {
-
+	BRect area = page->ChildrenBounds();
+	
+	float dpmm = dpi/25.4f;
+	
+	ox = area.left * dpmm;
+	oy = area.top * dpmm;
+	
+	if (Bounds().Height() < Bounds().Width()) {
+		scale = Bounds().Height() / (area.Height()*dpmm);
+	}
+	else {
+		scale = Bounds().Width() / (area.Width()*dpmm);
+	}
+	
+	clog<<"area"<<endl;
+	area.PrintToStream();
+	clog<<"scale:"<<scale<<endl;
+	
+	Invalidate();
 }

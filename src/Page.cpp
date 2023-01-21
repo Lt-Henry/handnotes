@@ -72,6 +72,14 @@ BRect Page::ChildrenBounds()
 {
 	BRect ret;
 	
+	if (fChildren.size() > 0) {
+		ret = fChildren[0]->Bounds();
+	}
+	
+	for (Object* child : fChildren) {
+		ret = ret | child->Bounds();
+	}
+	
 	return ret;
 }
 

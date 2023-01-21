@@ -246,6 +246,10 @@ void HandWindow::MessageReceived(BMessage* message)
 			view->ZoomFitPage();
 		break;
 		
+		case Message::MenuFitDrawing:
+			view->ZoomFitDrawing();
+		break;
+		
 		default:
 		BWindow::MessageReceived(message);
 	}
