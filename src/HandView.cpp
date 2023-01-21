@@ -289,8 +289,18 @@ void HandView::ZoomFitPage()
 	
 	float dpmm = dpi/25.4f;
 	
-	scale = Bounds().Height() / (page->Height()*dpmm);
+	if (Bounds().Height() < Bounds().Width()) {
+		scale = Bounds().Height() / (page->Height()*dpmm);
+	}
+	else {
+		scale = Bounds().Width() / (page->Width()*dpmm);
+	}
 	clog<<"scale:"<<scale<<endl;
 	
 	Invalidate();
+}
+
+void HandView::ZoomFitDrawing()
+{
+
 }

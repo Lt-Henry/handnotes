@@ -68,6 +68,13 @@ Page::~Page()
 
 }
 
+BRect Page::ChildrenBounds()
+{
+	BRect ret;
+	
+	return ret;
+}
+
 void Page::Draw(BView* view)
 {
 	float dpmm = dpi/25.4f;

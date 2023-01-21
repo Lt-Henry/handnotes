@@ -54,6 +54,8 @@ namespace handnotes
 			return fChildren;
 		}
 		
+		virtual BRect Bounds() = 0;
+		
 		virtual void Draw(BView* view) {};
 		
 		protected:

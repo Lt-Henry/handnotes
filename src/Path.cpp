@@ -102,6 +102,28 @@ Path::Path(vector<BPoint>& nodes, rgb_color color, float width, bool simplify) :
 	}
 }
 
+BRect Path::Bounds()
+{
+	BRect ret(0,0,0,0);
+	
+	for (BPoint& point : vertices) {
+		if (point.x < ret.left) {
+			ret.left = point.x;
+		}
+		if (point.x > ret.right) {
+			ret.right = point.x;
+		}
+		if (point.y < ret.top) {
+			ret.top = point.y;
+		}
+		if (point.y > ret.bottom) {
+			ret.bottom = point.y;
+		}
+	}
+	
+	return ret;
+}
+
 void Path::Draw(BView* view)
 {
 	view->SetLineMode(B_ROUND_CAP,B_SQUARE_JOIN);

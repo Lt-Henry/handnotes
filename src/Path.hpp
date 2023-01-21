@@ -43,6 +43,7 @@ namespace handnotes
 		
 		Path(std::vector<BPoint>& nodes, rgb_color color, float width, bool simplify=true);
 		
+		BRect Bounds() override;
 		void Draw(BView* view) override;
 	};
 }

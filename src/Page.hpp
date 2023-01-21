@@ -92,6 +92,8 @@ namespace handnotes
 			return BRect(0,0,dpmm * width, dpmm * height);
 		}
 		
+		BRect ChildrenBounds();
+		
 		void Draw(BView* view) override;
 		
 		protected:
