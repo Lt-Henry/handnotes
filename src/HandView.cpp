@@ -67,16 +67,13 @@ void HandView::MessageReceived(BMessage* message)
 		case B_MOUSE_WHEEL_CHANGED:
 			if(message->FindFloat("be:wheel_delta_y",&delta) == B_OK) {
 				delta=-delta;
-				scale = scale + (delta*0.1);
-
-				if (scale<0.1) {
-					scale=0.1;
-				}
 				
-				if (scale>5.0) {
-					scale=5.0;
+				if (delta < 0) {
+					ZoomIn();
 				}
-			Invalidate();
+				else {
+					ZoomOut();
+				}
 			}
 		break;
 
@@ -268,11 +265,19 @@ void HandView::Home()
 
 void HandView::ZoomIn()
 {
+	scale = scale - 0.1;
+	if (scale < 0.1) {
+		scale = 0.1;
+	}
 	Invalidate();
 }
 
 void HandView::ZoomOut()
 {
+	scale = scale + 0.1;
+	if (scale > 5.0) {
+		scale = 5.0;
+	}
 	Invalidate();
 }
 
