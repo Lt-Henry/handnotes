@@ -327,3 +327,13 @@ void HandView::ZoomFitDrawing()
 	
 	Invalidate();
 }
+
+void HandView::SetDrawingTool(DrawingTool dt)
+{
+	drawingTool = dt;
+}
+
+void HandView::SetTool(Tool t)
+{
+	tool = t;
+}

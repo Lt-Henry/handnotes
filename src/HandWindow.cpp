@@ -104,8 +104,18 @@ HandWindow::HandWindow()
 	BMenu* menuTool = new BMenu("Tool");
 	menu->AddItem(menuTool);
 	
-	menuTool->AddItem(new BMenuItem("Pen",new BMessage(Message::MenuPen)));
-	menuTool->AddItem(new BMenuItem("Highlighter",new BMessage(Message::MenuHighlighter)));
+	itemPencil = new BMenuItem("Pencil",new BMessage(Message::MenuPencil));
+	itemPencil->SetMarked(true);
+	menuTool->AddItem(itemPencil);
+	
+	itemHighlighter = new BMenuItem("Highlighter",new BMessage(Message::MenuHighlighter));
+	menuTool->AddItem(itemHighlighter);
+	
+	menuTool->AddSeparatorItem();
+	
+	itemRuler = new BMenuItem("Ruler",new BMessage(Message::MenuRuler));
+	itemRuler->SetMarked(false);
+	menuTool->AddItem(itemRuler);
 	
 	//exportWindow = new ExportWindow();
 	/*
@@ -248,6 +258,29 @@ void HandWindow::MessageReceived(BMessage* message)
 		
 		case Message::MenuFitDrawing:
 			view->ZoomFitDrawing();
+		break;
+		
+		case Message::MenuPencil:
+			view->SetDrawingTool(DrawingTool::Pencil);
+			itemPencil->SetMarked(true);
+			itemHighlighter->SetMarked(false);
+		break;
+		
+		case Message::MenuHighlighter:
+			view->SetDrawingTool(DrawingTool::Highlighter);
+			itemPencil->SetMarked(false);
+			itemHighlighter->SetMarked(true);
+		break;
+		
+		case Message::MenuRuler:
+			if (itemRuler->IsMarked()) {
+				view->SetTool(Tool::FreeHand);
+				itemRuler->SetMarked(false);
+			}
+			else {
+				view->SetTool(Tool::Ruler);
+				itemRuler->SetMarked(true);
+			}
 		break;
 		
 		default:

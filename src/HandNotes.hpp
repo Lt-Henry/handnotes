@@ -54,8 +54,10 @@ namespace handnotes
 		MenuFitPage,
 		MenuFitDrawing,
 		
-		MenuPen,
-		MenuHighlighter
+		MenuPencil,
+		MenuHighlighter,
+		
+		MenuRuler
 	};
 	
 	struct Palette
