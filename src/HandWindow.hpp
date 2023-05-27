@@ -58,6 +58,7 @@ namespace handnotes
 		ExportWindow* exportWindow;
 		
 		BMenuItem* itemPencil;
+		BMenuItem* itemRollerball;
 		BMenuItem* itemHighlighter;
 		BMenuItem* itemRuler;
 		

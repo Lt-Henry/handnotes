@@ -51,6 +51,7 @@ namespace handnotes
 	enum class DrawingTool
 	{
 		Pencil,
+		Rollerball,
 		Highlighter
 	};
 

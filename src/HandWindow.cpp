@@ -108,6 +108,9 @@ HandWindow::HandWindow()
 	itemPencil->SetMarked(true);
 	menuTool->AddItem(itemPencil);
 	
+	itemRollerball = new BMenuItem("Rollerball",new BMessage(Message::MenuRollerball));
+	menuTool->AddItem(itemRollerball);
+	
 	itemHighlighter = new BMenuItem("Highlighter",new BMessage(Message::MenuHighlighter));
 	menuTool->AddItem(itemHighlighter);
 	
@@ -263,12 +266,21 @@ void HandWindow::MessageReceived(BMessage* message)
 		case Message::MenuPencil:
 			view->SetDrawingTool(DrawingTool::Pencil);
 			itemPencil->SetMarked(true);
+			itemRollerball->SetMarked(false);
+			itemHighlighter->SetMarked(false);
+		break;
+		
+		case Message::MenuRollerball:
+			view->SetDrawingTool(DrawingTool::Rollerball);
+			itemPencil->SetMarked(false);
+			itemRollerball->SetMarked(true);
 			itemHighlighter->SetMarked(false);
 		break;
 		
 		case Message::MenuHighlighter:
 			view->SetDrawingTool(DrawingTool::Highlighter);
 			itemPencil->SetMarked(false);
+			itemRollerball->SetMarked(false);
 			itemHighlighter->SetMarked(true);
 		break;
 		

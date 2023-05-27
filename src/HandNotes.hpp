@@ -55,6 +55,7 @@ namespace handnotes
 		MenuFitDrawing,
 		
 		MenuPencil,
+		MenuRollerball,
 		MenuHighlighter,
 		
 		MenuRuler

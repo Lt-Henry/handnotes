@@ -133,9 +133,13 @@ void HandView::MouseUp(BPoint where)
 		switch (drawingTool) {
 			case DrawingTool::Pencil:
 				page->Add(new Path(outline,{94,129,172,230},1.0f));
-				
+
 			break;
-			
+
+			case DrawingTool::Rollerball:
+				page->Add(new Path(outline,{32,32,32,255},2.2f));
+			break;
+
 			case DrawingTool::Highlighter:
 				page->Add(new Path(outline,{255,117,0,128},8.0f));
 			break;
@@ -236,7 +240,13 @@ void HandView::Draw(BRect updateRect)
 						SetPenSize(1.0);
 						StrokePolygon(outline.data(),outline.size(),false);
 					break;
-					
+
+					case DrawingTool::Rollerball:
+						SetHighColor({32,32,32,255});
+						SetPenSize(2.2);
+						StrokePolygon(outline.data(),outline.size(),false);
+					break;
+
 					case DrawingTool::Highlighter:
 						SetHighColor({255,117,0,128});
 						SetPenSize(8.0f);
