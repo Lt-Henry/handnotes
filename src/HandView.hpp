@@ -45,7 +45,8 @@ namespace handnotes
 	enum class Tool
 	{
 		FreeHand,
-		Ruler
+		Ruler,
+		Arrow
 	};
 
 	enum class DrawingTool

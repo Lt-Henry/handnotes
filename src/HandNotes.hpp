@@ -58,7 +58,8 @@ namespace handnotes
 		MenuRollerball,
 		MenuHighlighter,
 		
-		MenuRuler
+		MenuRuler,
+		MenuArrow
 	};
 	
 	struct Palette

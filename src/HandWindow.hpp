@@ -61,6 +61,7 @@ namespace handnotes
 		BMenuItem* itemRollerball;
 		BMenuItem* itemHighlighter;
 		BMenuItem* itemRuler;
+		BMenuItem* itemArrow;
 		
 		
 	};

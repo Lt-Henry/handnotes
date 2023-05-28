@@ -32,6 +32,23 @@ using namespace handnotes;
 
 using namespace std;
 
+class Vec2
+{
+	public:
+	
+	Vec2(BPoint a,BPoint b)
+	{
+		data = b-a;
+	}
+	
+	float Norm() const
+	{
+		return std::sqrt((data.x*data.x)+(data.y*data.y));
+	}
+	
+	BPoint data;
+};
+
 HandView::HandView(BRect frame)
 : BView(frame, "HandView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_SUBPIXEL_PRECISE)
 {
@@ -172,6 +189,7 @@ void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 				outline.push_back(where);
 			break;
 			
+			case Tool::Arrow:
 			case Tool::Ruler:
 				outline[1] = where;
 			break;
@@ -256,6 +274,13 @@ void HandView::Draw(BRect updateRect)
 			break;
 			
 			case Tool::Ruler:
+				SetHighColor({32,32,32,128});
+				SetPenSize(1.0f);
+				MovePenTo(outline[0]);
+				StrokeLine(outline[1]);
+			break;
+			
+			case Tool::Arrow:
 				SetHighColor({32,32,32,128});
 				SetPenSize(1.0f);
 				MovePenTo(outline[0]);

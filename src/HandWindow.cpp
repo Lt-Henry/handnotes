@@ -117,8 +117,12 @@ HandWindow::HandWindow()
 	menuTool->AddSeparatorItem();
 	
 	itemRuler = new BMenuItem("Ruler",new BMessage(Message::MenuRuler));
-	itemRuler->SetMarked(false);
 	menuTool->AddItem(itemRuler);
+	
+	//menuTool->AddSeparatorItem();
+	
+	itemArrow = new BMenuItem("Arrow",new BMessage(Message::MenuArrow));
+	menuTool->AddItem(itemArrow);
 	
 	//exportWindow = new ExportWindow();
 	/*
@@ -292,6 +296,19 @@ void HandWindow::MessageReceived(BMessage* message)
 			else {
 				view->SetTool(Tool::Ruler);
 				itemRuler->SetMarked(true);
+				itemArrow->SetMarked(false);
+			}
+		break;
+		
+		case Message::MenuArrow:
+			if (itemArrow->IsMarked()) {
+				view->SetTool(Tool::FreeHand);
+				itemArrow->SetMarked(false);
+			}
+			else {
+				view->SetTool(Tool::Arrow);
+				itemRuler->SetMarked(false);
+				itemArrow->SetMarked(true);
 			}
 		break;
 		
