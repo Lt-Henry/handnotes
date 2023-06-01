@@ -35,17 +35,57 @@ using namespace std;
 class Vec2
 {
 	public:
-	
+
+	Vec2()
+	{
+	}
+
 	Vec2(BPoint a,BPoint b)
 	{
 		data = b-a;
 	}
-	
+
+	Vec2(BPoint v)
+	{
+		data = v;
+	}
+
+	Vec2(float x,float y)
+	{
+		data = BPoint(x,y);
+	}
+
 	float Norm() const
 	{
 		return std::sqrt((data.x*data.x)+(data.y*data.y));
 	}
-	
+
+	Vec2 Unit() const
+	{
+		float norm = Norm();
+		BPoint v;
+
+		v.x=data.x/norm;
+		v.y=data.y/norm;
+
+		return Vec2(v);
+	}
+
+	Vec2 Invert()
+	{
+		return Vec2(-data.x,-data.y);
+	}
+
+	Vec2 operator * (float s)
+	{
+		return Vec2(data.x*s,data.y*s);
+	}
+
+	BPoint Point() const
+	{
+		return data;
+	}
+
 	BPoint data;
 };
 
@@ -280,14 +320,29 @@ void HandView::Draw(BRect updateRect)
 				StrokeLine(outline[1]);
 			break;
 			
-			case Tool::Arrow:
+			case Tool::Arrow: {
 				SetHighColor({32,32,32,128});
 				SetPenSize(1.0f);
 				MovePenTo(outline[0]);
 				StrokeLine(outline[1]);
+
+				Vec2 ab = Vec2(outline[0],outline[1]).Unit();
+				Vec2 ba = ab.Invert();
+				ba = ba * 10.0f;
+				Vec2 left = Vec2(ba.data.y,-ba.data.x);
+				Vec2 right = left.Invert();
+
+				BPoint p(outline[1].x+ba.data.x+left.data.x,outline[1].y+ba.data.y+left.data.y);
+				BPoint q(outline[1].x+ba.data.x+right.data.x,outline[1].y+ba.data.y+right.data.y);
+
+				MovePenTo(outline[1]);
+				StrokeLine(p);
+				MovePenTo(outline[1]);
+				StrokeLine(q);
+			}
 			break;
 		}
-		
+
 	}
 }
 
