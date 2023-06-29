@@ -37,11 +37,24 @@ namespace handnotes
 		public:
 		
 		Object(uint32 id) : fId(id){}
-		virtual ~Object(){};
+		Object(uint32 id, rgb_color strokeColor, float strokeWidth):
+			fId(id), fStrokeColor(strokeColor), fStrokeWidth(strokeWidth) {}
+			
+		virtual ~Object() {}
 		
-		uint32 Id()
+		uint32 Id() const
 		{
 			return fId;
+		}
+		
+		rgb_color StrokeColor() const
+		{
+			return fStrokeColor;
+		}
+		
+		float StrokeWidth() const
+		{
+			return fStrokeWidth;
 		}
 		
 		void Add(Object* child)
@@ -56,11 +69,18 @@ namespace handnotes
 		
 		virtual BRect Bounds() = 0;
 		
-		virtual void Draw(BView* view) {};
+		virtual void Draw(BView* view) {}
+		
+		virtual void Begin(BPoint point) {}
+		virtual void Step(BPoint point) {}
+		virtual void End(BPoint point) {}
 		
 		protected:
 		
 		uint32 fId;
+		
+		rgb_color fStrokeColor;
+		float fStrokeWidth;
 		
 		std::vector<Object*> fChildren;
 	};

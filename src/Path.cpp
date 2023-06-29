@@ -102,6 +102,11 @@ Path::Path(vector<BPoint>& nodes, rgb_color color, float width, bool simplify) :
 	}
 }
 
+Path::Path(rgb_color color, float width, bool simplify) :
+	Object('PATH',color,width), fSimplify(simplify)
+{
+}
+
 BRect Path::Bounds()
 {
 	BRect ret(0,0,0,0);
@@ -153,4 +158,37 @@ void Path::Draw(BView* view)
 		view->FillEllipse(p,0.1,0.1);
 	}
 	*/
+}
+
+void Path::Begin(BPoint point)
+{
+	vertices.clear();
+	vertices.push_back(point);
+}
+
+void Path::Step(BPoint point)
+{
+	vertices.push_back(point);
+}
+
+void Path::End(BPoint point)
+{
+	vertices.push_back(point);
+	
+	// ramer curve simplification
+	if (fSimplify and vertices.size()>3) {
+			vector<int> valids;
+			
+			valids.push_back(0);
+			ramer(vertices,valids,0,vertices.size()-1);
+			valids.push_back(vertices.size()-1);
+			
+			vector<BPoint> tmp;
+			
+			for (int n:valids) {
+				tmp.push_back(vertices[n]);
+			}
+			
+			vertices = tmp;
+	}
 }

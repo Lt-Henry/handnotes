@@ -42,9 +42,17 @@ namespace handnotes
 		std::vector<BPoint> vertices;
 		
 		Path(std::vector<BPoint>& nodes, rgb_color color, float width, bool simplify=true);
+		Path(rgb_color color,float width, bool simplify = true);
 		
 		BRect Bounds() override;
 		void Draw(BView* view) override;
+		
+		void Begin(BPoint point) override;
+		void Step(BPoint point) override;
+		void End(BPoint point) override;
+		
+		protected:
+		bool fSimplify;
 	};
 }
 #endif
