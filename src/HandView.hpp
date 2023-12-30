@@ -97,6 +97,8 @@ namespace handnotes
 		std::vector<BPoint> outline;
 		std::vector<handnotes::Path> paths;
 		
+		handnotes::Object* preview;
+		
 		BCursor* cursor_default;
 		BCursor* cursor_grab;
 	};

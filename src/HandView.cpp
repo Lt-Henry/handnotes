@@ -166,6 +166,9 @@ void HandView::MouseDown(BPoint where)
 			outline.push_back(where);
 		}
 		
+		preview = new handnotes::Path({32,32,32,255},2.2f);
+		preview->Begin(where);
+		
 		Invalidate();
 	}
 
@@ -183,10 +186,14 @@ void HandView::MouseDown(BPoint where)
 
 void HandView::MouseUp(BPoint where)
 {
-
+	where.x = where.x / scale;
+	where.y = where.y / scale;
+	where.x = where.x - ox;
+	where.y = where.y - oy;
+		
 	if (action == Action::Draw) {
 		action = Action::None;
-		
+		/*
 		switch (drawingTool) {
 			case DrawingTool::Pencil:
 				page->Add(new Path(outline,{94,129,172,230},1.0f));
@@ -201,6 +208,12 @@ void HandView::MouseUp(BPoint where)
 				page->Add(new Path(outline,{255,117,0,128},8.0f));
 			break;
 		}
+		*/
+		
+		preview->End(where);
+		page->Add(preview);
+		preview = nullptr;
+		
 		outline.clear();
 		Invalidate();
 	}
@@ -234,6 +247,8 @@ void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 				outline[1] = where;
 			break;
 		}
+
+		preview->Step(where);
 
 		Invalidate();
 	}
@@ -290,6 +305,9 @@ void HandView::Draw(BRect updateRect)
 	page->Draw(this);
 	
 	if (action == Action::Draw) {
+
+		preview->Draw(this);
+	/*
 		switch (tool) {
 			case Tool::FreeHand:
 				switch(drawingTool) {
@@ -342,7 +360,7 @@ void HandView::Draw(BRect updateRect)
 			}
 			break;
 		}
-
+*/
 	}
 }
 

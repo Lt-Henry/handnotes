@@ -103,7 +103,7 @@ Path::Path(vector<BPoint>& nodes, rgb_color color, float width, bool simplify) :
 }
 
 Path::Path(rgb_color color, float width, bool simplify) :
-	Object('PATH',color,width), fSimplify(simplify)
+	Object('PATH',color,width), fSimplify(simplify), color(color), width(width)
 {
 }
 
