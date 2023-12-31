@@ -23,6 +23,8 @@ SOFTWARE.
 */
 
 #include "HandView.hpp"
+#include "Path.hpp"
+#include "Line.hpp"
 
 #include <Window.h>
 
@@ -166,7 +168,16 @@ void HandView::MouseDown(BPoint where)
 			outline.push_back(where);
 		}
 		
-		preview = new handnotes::Path({32,32,32,255},2.2f);
+		switch (tool) {
+			case Tool::FreeHand:
+				preview = new handnotes::Path({32,32,32,255},2.2f);
+			break;
+			
+			case Tool::Ruler:
+				preview = new handnotes::Line({32,32,32,255},2.2f);
+			break;
+		}
+		
 		preview->Begin(where);
 		
 		Invalidate();
