@@ -22,62 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Line.hpp"
+#ifndef HAND_ARROW
+#define HAND_ARROW
 
-#include <cmath>
-#include <iostream>
+#include "Object.hpp"
 
-using namespace handnotes;
+#include <Point.h>
+#include <View.h>
 
-using namespace std;
-
-Line::Line(rgb_color color, float width) :
-	Object('LINE',color,width)
+namespace handnotes
 {
-}
-
-BRect Line::Bounds()
-{
-	BRect ret(0,0,0,0);
-	
-	ret.left = start.x;
-	ret.top = start.y;
-	ret.right = end.x;
-	ret.bottom = end.y;
-	
-	for (Object* child : fChildren) {
-		BRect childBounds = child->Bounds();
+	class Arrow: public Object
+	{
+		public:
 		
-		ret = ret | childBounds;
-	}
-	
-	return ret;
+		BPoint start;
+		BPoint end;
+		
+		Arrow(rgb_color color,float width);
+		
+		BRect Bounds() override;
+		void Draw(BView* view) override;
+		
+		void Begin(BPoint point) override;
+		void Step(BPoint point) override;
+		void End(BPoint point) override;
+		
+	};
 }
-
-void Line::Draw(BView* view)
-{
-	view->SetLineMode(B_ROUND_CAP,B_SQUARE_JOIN);
-	view->SetDrawingMode(B_OP_ALPHA);
-	
-	view->SetHighColor(StrokeColor());
-	view->SetPenSize(StrokeWidth());
-	view->StrokeLine(start,end);
-	
-	view->SetHighColor({0,0,0,255});
-}
-
-void Line::Begin(BPoint point)
-{
-	start = point;
-	end = start;
-}
-
-void Line::Step(BPoint point)
-{
-	end = point;
-}
-
-void Line::End(BPoint point)
-{
-	end = point;
-}
+#endif

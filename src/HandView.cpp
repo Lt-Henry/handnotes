@@ -25,6 +25,7 @@ SOFTWARE.
 #include "HandView.hpp"
 #include "Path.hpp"
 #include "Line.hpp"
+#include "Arrow.hpp"
 
 #include <Window.h>
 
@@ -33,63 +34,6 @@ SOFTWARE.
 using namespace handnotes;
 
 using namespace std;
-
-class Vec2
-{
-	public:
-
-	Vec2()
-	{
-	}
-
-	Vec2(BPoint a,BPoint b)
-	{
-		data = b-a;
-	}
-
-	Vec2(BPoint v)
-	{
-		data = v;
-	}
-
-	Vec2(float x,float y)
-	{
-		data = BPoint(x,y);
-	}
-
-	float Norm() const
-	{
-		return std::sqrt((data.x*data.x)+(data.y*data.y));
-	}
-
-	Vec2 Unit() const
-	{
-		float norm = Norm();
-		BPoint v;
-
-		v.x=data.x/norm;
-		v.y=data.y/norm;
-
-		return Vec2(v);
-	}
-
-	Vec2 Invert()
-	{
-		return Vec2(-data.x,-data.y);
-	}
-
-	Vec2 operator * (float s)
-	{
-		return Vec2(data.x*s,data.y*s);
-	}
-
-	BPoint Point() const
-	{
-		return data;
-	}
-
-	BPoint data;
-};
 
 HandView::HandView(BRect frame)
 : BView(frame, "HandView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_SUBPIXEL_PRECISE)
@@ -175,6 +119,10 @@ void HandView::MouseDown(BPoint where)
 			
 			case Tool::Ruler:
 				preview = new handnotes::Line({32,32,32,255},2.2f);
+			break;
+			
+			case Tool::Arrow:
+				preview = new handnotes::Arrow({220,32,32,255},2.6f);
 			break;
 		}
 		

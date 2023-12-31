@@ -22,62 +22,70 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Line.hpp"
+#ifndef HAND_VECTOR
+#define HAND_VECTOR
 
-#include <cmath>
-#include <iostream>
+#include <Point.h>
 
-using namespace handnotes;
-
-using namespace std;
-
-Line::Line(rgb_color color, float width) :
-	Object('LINE',color,width)
+namespace handnotes
 {
+
+	class Vec2
+	{
+		public:
+
+		Vec2()
+		{
+		}
+
+		Vec2(BPoint a,BPoint b)
+		{
+			data = b-a;
+		}
+
+		Vec2(BPoint v)
+		{
+			data = v;
+		}
+
+		Vec2(float x,float y)
+		{
+			data = BPoint(x,y);
+		}
+
+		float Norm() const
+		{
+			return std::sqrt((data.x*data.x)+(data.y*data.y));
+		}
+
+		Vec2 Unit() const
+		{
+			float norm = Norm();
+			BPoint v;
+
+			v.x=data.x/norm;
+			v.y=data.y/norm;
+
+			return Vec2(v);
+		}
+
+		Vec2 Invert()
+		{
+			return Vec2(-data.x,-data.y);
+		}
+
+		Vec2 operator * (float s)
+		{
+			return Vec2(data.x*s,data.y*s);
+		}
+
+		BPoint Point() const
+		{
+			return data;
+		}
+
+		BPoint data;
+	};
 }
 
-BRect Line::Bounds()
-{
-	BRect ret(0,0,0,0);
-	
-	ret.left = start.x;
-	ret.top = start.y;
-	ret.right = end.x;
-	ret.bottom = end.y;
-	
-	for (Object* child : fChildren) {
-		BRect childBounds = child->Bounds();
-		
-		ret = ret | childBounds;
-	}
-	
-	return ret;
-}
-
-void Line::Draw(BView* view)
-{
-	view->SetLineMode(B_ROUND_CAP,B_SQUARE_JOIN);
-	view->SetDrawingMode(B_OP_ALPHA);
-	
-	view->SetHighColor(StrokeColor());
-	view->SetPenSize(StrokeWidth());
-	view->StrokeLine(start,end);
-	
-	view->SetHighColor({0,0,0,255});
-}
-
-void Line::Begin(BPoint point)
-{
-	start = point;
-	end = start;
-}
-
-void Line::Step(BPoint point)
-{
-	end = point;
-}
-
-void Line::End(BPoint point)
-{
-	end = point;
-}
+#endif

@@ -22,7 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Line.hpp"
+#include "Arrow.hpp"
+#include "Vector.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -31,12 +32,12 @@ using namespace handnotes;
 
 using namespace std;
 
-Line::Line(rgb_color color, float width) :
-	Object('LINE',color,width)
+Arrow::Arrow(rgb_color color, float width) :
+	Object('ARRW',color,width)
 {
 }
 
-BRect Line::Bounds()
+BRect Arrow::Bounds()
 {
 	BRect ret(0,0,0,0);
 	
@@ -54,7 +55,7 @@ BRect Line::Bounds()
 	return ret;
 }
 
-void Line::Draw(BView* view)
+void Arrow::Draw(BView* view)
 {
 	view->SetLineMode(B_ROUND_CAP,B_SQUARE_JOIN);
 	view->SetDrawingMode(B_OP_ALPHA);
@@ -63,21 +64,35 @@ void Line::Draw(BView* view)
 	view->SetPenSize(StrokeWidth());
 	view->StrokeLine(start,end);
 	
-	view->SetHighColor({0,0,0,255});
+	Vec2 ab = Vec2(start,end).Unit();
+	Vec2 ba = ab.Invert();
+	ba = ba * 10.0f;
+	Vec2 left = Vec2(ba.data.y,-ba.data.x);
+	Vec2 right = left.Invert();
+
+	BPoint p(end.x+ba.data.x+left.data.x,end.y+ba.data.y+left.data.y);
+	BPoint q(end.x+ba.data.x+right.data.x,end.y+ba.data.y+right.data.y);
+
+	view->MovePenTo(end);
+	view->StrokeLine(p);
+	view->MovePenTo(end);
+	view->StrokeLine(q);
+	
+	//view->SetHighColor({0,0,0,255});
 }
 
-void Line::Begin(BPoint point)
+void Arrow::Begin(BPoint point)
 {
 	start = point;
 	end = start;
 }
 
-void Line::Step(BPoint point)
+void Arrow::Step(BPoint point)
 {
 	end = point;
 }
 
-void Line::End(BPoint point)
+void Arrow::End(BPoint point)
 {
 	end = point;
 }
