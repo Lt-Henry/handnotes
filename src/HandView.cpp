@@ -26,6 +26,7 @@ SOFTWARE.
 #include "Path.hpp"
 #include "Line.hpp"
 #include "Arrow.hpp"
+#include "Measure.hpp"
 
 #include <Window.h>
 
@@ -43,13 +44,13 @@ HandView::HandView(BRect frame)
 	ox = 0.0f;
 	oy = 0.0f;
 	action = Action::None;
-	tool = Tool::FreeHand;
-	drawingTool = DrawingTool::Pencil;
+	SetTool(Tool::FreeHand);
+	SetDrawingTool(DrawingTool::Pencil);
 	
 	cursor_default = new BCursor(B_CURSOR_ID_SYSTEM_DEFAULT);
 	cursor_grab = new BCursor(B_CURSOR_ID_GRABBING);
 	
-	page = new handnotes::Page(PageFormat::A4, PageType::Squared, dpi);
+	page = new handnotes::Page(PageFormat::A4, PageType::Dotted, dpi);
 }
 
 HandView::~HandView()
@@ -106,23 +107,23 @@ void HandView::MouseDown(BPoint where)
 		where.y = where.y / scale;
 		where.x = where.x - ox;
 		where.y = where.y - oy;
-		outline.push_back(where);
-		
-		if (tool == Tool::Ruler) {
-			outline.push_back(where);
-		}
 		
 		switch (tool) {
 			case Tool::FreeHand:
-				preview = new handnotes::Path({32,32,32,255},2.2f);
+				preview = new handnotes::Path(toolColor, toolWidth);
+				clog<<"start drawing..."<<endl;
 			break;
 			
 			case Tool::Ruler:
-				preview = new handnotes::Line({32,32,32,255},2.2f);
+				preview = new handnotes::Line(toolColor, toolWidth);
 			break;
 			
 			case Tool::Arrow:
-				preview = new handnotes::Arrow({220,32,32,255},2.6f);
+				preview = new handnotes::Arrow(toolColor, toolWidth);
+			break;
+			
+			case Tool::Measure:
+				preview = new handnotes::Measure(toolColor, toolWidth, 0);
 			break;
 		}
 		
@@ -152,28 +153,11 @@ void HandView::MouseUp(BPoint where)
 		
 	if (action == Action::Draw) {
 		action = Action::None;
-		/*
-		switch (drawingTool) {
-			case DrawingTool::Pencil:
-				page->Add(new Path(outline,{94,129,172,230},1.0f));
-
-			break;
-
-			case DrawingTool::Rollerball:
-				page->Add(new Path(outline,{32,32,32,255},2.2f));
-			break;
-
-			case DrawingTool::Highlighter:
-				page->Add(new Path(outline,{255,117,0,128},8.0f));
-			break;
-		}
-		*/
 		
 		preview->End(where);
 		page->Add(preview);
 		preview = nullptr;
-		
-		outline.clear();
+		clog<<"done"<<endl;
 		Invalidate();
 	}
 	
@@ -191,21 +175,9 @@ void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 		
 		where.x = where.x / scale;
 		where.y = where.y / scale;
-
 		
 		where.x = where.x - ox;
 		where.y = where.y - oy;
-		
-		switch(tool) {
-			case Tool::FreeHand:
-				outline.push_back(where);
-			break;
-			
-			case Tool::Arrow:
-			case Tool::Ruler:
-				outline[1] = where;
-			break;
-		}
 
 		preview->Step(where);
 
@@ -264,62 +236,7 @@ void HandView::Draw(BRect updateRect)
 	page->Draw(this);
 	
 	if (action == Action::Draw) {
-
 		preview->Draw(this);
-	/*
-		switch (tool) {
-			case Tool::FreeHand:
-				switch(drawingTool) {
-					case DrawingTool::Pencil:
-						SetHighColor({94,129,172,230});
-						SetPenSize(1.0);
-						StrokePolygon(outline.data(),outline.size(),false);
-					break;
-
-					case DrawingTool::Rollerball:
-						SetHighColor({32,32,32,255});
-						SetPenSize(2.2);
-						StrokePolygon(outline.data(),outline.size(),false);
-					break;
-
-					case DrawingTool::Highlighter:
-						SetHighColor({255,117,0,128});
-						SetPenSize(8.0f);
-						StrokePolygon(outline.data(),outline.size(),false);
-					break;
-				}
-			break;
-			
-			case Tool::Ruler:
-				SetHighColor({32,32,32,128});
-				SetPenSize(1.0f);
-				MovePenTo(outline[0]);
-				StrokeLine(outline[1]);
-			break;
-			
-			case Tool::Arrow: {
-				SetHighColor({32,32,32,128});
-				SetPenSize(1.0f);
-				MovePenTo(outline[0]);
-				StrokeLine(outline[1]);
-
-				Vec2 ab = Vec2(outline[0],outline[1]).Unit();
-				Vec2 ba = ab.Invert();
-				ba = ba * 10.0f;
-				Vec2 left = Vec2(ba.data.y,-ba.data.x);
-				Vec2 right = left.Invert();
-
-				BPoint p(outline[1].x+ba.data.x+left.data.x,outline[1].y+ba.data.y+left.data.y);
-				BPoint q(outline[1].x+ba.data.x+right.data.x,outline[1].y+ba.data.y+right.data.y);
-
-				MovePenTo(outline[1]);
-				StrokeLine(p);
-				MovePenTo(outline[1]);
-				StrokeLine(q);
-			}
-			break;
-		}
-*/
 	}
 }
 
@@ -398,6 +315,23 @@ void HandView::ZoomFitDrawing()
 void HandView::SetDrawingTool(DrawingTool dt)
 {
 	drawingTool = dt;
+	
+	switch (drawingTool) {
+		case DrawingTool::Pencil:
+			toolWidth = 1.0f;
+			toolColor = {94,129,172,230};
+		break;
+
+		case DrawingTool::Rollerball:
+			toolWidth = 2.2f;
+			toolColor = {32,32,32,255};
+		break;
+
+		case DrawingTool::Highlighter:
+			toolWidth = 8.0f;
+			toolColor = {255,117,0,128};
+		break;
+	}
 }
 
 void HandView::SetTool(Tool t)

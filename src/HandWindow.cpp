@@ -124,6 +124,9 @@ HandWindow::HandWindow()
 	itemArrow = new BMenuItem("Arrow",new BMessage(Message::MenuArrow));
 	menuTool->AddItem(itemArrow);
 	
+	itemMeasure = new BMenuItem("Measure",new BMessage(Message::MenuMeasure));
+	menuTool->AddItem(itemMeasure);
+	
 	//exportWindow = new ExportWindow();
 	/*
 	htoolbar = new BGroupView();
@@ -297,6 +300,7 @@ void HandWindow::MessageReceived(BMessage* message)
 				view->SetTool(Tool::Ruler);
 				itemRuler->SetMarked(true);
 				itemArrow->SetMarked(false);
+				itemMeasure->SetMarked(false);
 			}
 		break;
 		
@@ -309,6 +313,20 @@ void HandWindow::MessageReceived(BMessage* message)
 				view->SetTool(Tool::Arrow);
 				itemRuler->SetMarked(false);
 				itemArrow->SetMarked(true);
+				itemMeasure->SetMarked(false);
+			}
+		break;
+		
+		case Message::MenuMeasure:
+			if (itemMeasure->IsMarked()) {
+				view->SetTool(Tool::FreeHand);
+				itemMeasure->SetMarked(false);
+			}
+			else {
+				view->SetTool(Tool::Measure);
+				itemRuler->SetMarked(false);
+				itemArrow->SetMarked(false);
+				itemMeasure->SetMarked(true);
 			}
 		break;
 		

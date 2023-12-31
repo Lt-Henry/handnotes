@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2021 Enrique Medina Gremaldos <quiqueiii@gmail.com>
+Copyright (c) 2023 Enrique Medina Gremaldos <quiqueiii@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,47 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef HAND_WINDOW
-#define HAND_WINDOW
+#ifndef HAND_MEASURE
+#define HAND_MEASURE
 
-#include "HandView.hpp"
-#include "ExportWindow.hpp"
+#include "Object.hpp"
 
-#include <Window.h>
-#include <GroupView.h>
-#include <FilePanel.h>
+#include <Point.h>
+#include <View.h>
 
 namespace handnotes
 {
-	class HandWindow : public BWindow
+	class Measure: public Object
 	{
 		public:
 		
-		HandWindow();
-		~HandWindow();
+		BPoint start;
+		BPoint end;
+		int flags;
 		
-		virtual bool QuitRequested() override;
-		void MessageReceived(BMessage* message) override;
+		Measure(rgb_color color,float width,int flags);
 		
-		protected:
+		BRect Bounds() override;
+		void Draw(BView* view) override;
 		
-		BGroupView* htoolbar;
-		BGroupView* rtoolbar;
-		
-		HandView* view;
-		
-		BFilePanel* openPanel;
-		BFilePanel* savePanel;
-		BFilePanel* exportPanel;
-		
-		ExportWindow* exportWindow;
-		
-		BMenuItem* itemPencil;
-		BMenuItem* itemRollerball;
-		BMenuItem* itemHighlighter;
-		BMenuItem* itemRuler;
-		BMenuItem* itemArrow;
-		BMenuItem* itemMeasure;
+		void Begin(BPoint point) override;
+		void Step(BPoint point) override;
+		void End(BPoint point) override;
 		
 	};
 }

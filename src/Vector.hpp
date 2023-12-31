@@ -78,10 +78,32 @@ namespace handnotes
 		{
 			return Vec2(data.x*s,data.y*s);
 		}
+		
+		Vec2 operator + (Vec2 v)
+		{
+			return Vec2(data + v.Point());
+		}
+		
+		Vec2 operator * (Vec2 v)
+		{
+			Vec2 o;
+			
+			return o;
+		}
 
 		BPoint Point() const
 		{
 			return data;
+		}
+		
+		float X() const
+		{
+			return data.x;
+		}
+		
+		float Y() const
+		{
+			return data.y;
 		}
 
 		BPoint data;

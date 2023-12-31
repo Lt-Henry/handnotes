@@ -94,6 +94,9 @@ namespace handnotes
 		DrawingTool drawingTool;
 		Tool tool;
 		
+		float toolWidth;
+		rgb_color toolColor;
+		
 		BPoint start;
 		std::vector<BPoint> outline;
 		std::vector<handnotes::Path> paths;

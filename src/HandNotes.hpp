@@ -59,7 +59,8 @@ namespace handnotes
 		MenuHighlighter,
 		
 		MenuRuler,
-		MenuArrow
+		MenuArrow,
+		MenuMeasure
 	};
 	
 	struct Palette
