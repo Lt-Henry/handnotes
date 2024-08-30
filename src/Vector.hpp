@@ -84,11 +84,10 @@ namespace handnotes
 			return Vec2(data + v.Point());
 		}
 		
-		Vec2 operator * (Vec2 v)
+		float operator * (Vec2 v)
 		{
-			Vec2 o;
-			
-			return o;
+			float r = (v.data.x * data.x) + (v.data.y * data.y);
+			return r;
 		}
 
 		BPoint Point() const

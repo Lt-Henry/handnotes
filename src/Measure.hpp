@@ -29,6 +29,7 @@ SOFTWARE.
 
 #include <Point.h>
 #include <View.h>
+#include <Font.h>
 
 namespace handnotes
 {
@@ -48,6 +49,10 @@ namespace handnotes
 		void Begin(BPoint point) override;
 		void Step(BPoint point) override;
 		void End(BPoint point) override;
+		
+		protected:
+		
+		BFont font;
 		
 	};
 }

@@ -111,7 +111,6 @@ void HandView::MouseDown(BPoint where)
 		switch (tool) {
 			case Tool::FreeHand:
 				preview = new handnotes::Path(toolColor, toolWidth);
-				clog<<"start drawing..."<<endl;
 			break;
 			
 			case Tool::Ruler:
@@ -157,7 +156,7 @@ void HandView::MouseUp(BPoint where)
 		preview->End(where);
 		page->Add(preview);
 		preview = nullptr;
-		clog<<"done"<<endl;
+		
 		Invalidate();
 	}
 	

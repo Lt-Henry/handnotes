@@ -79,6 +79,11 @@ void Measure::Draw(BView* view)
 	
 	Vec2 n(ab.Y(),-ab.X());
 	n = n.Unit();
+	
+	Vec2 baseline(1,0);
+	
+	float cos_alpha = n * baseline;
+	
 	n = n * (20.0f/dpmm);
 	middle = middle + n;
 	
@@ -87,10 +92,19 @@ void Measure::Draw(BView* view)
 	ss<<std::setprecision(2)<<std::fixed<<(dist/dpmm)<<" mm";
 	
 	view->MovePenTo(middle.Point());
-	BFont font;
 	view->GetFont(&font);
-	float angle = 0;
+	float angle = 0.0f;
+	
+	if (n.Y() > 0) {
+		angle = 270.0f - (acos(cos_alpha) * 180.0f/M_PI);
+	}
+	else {
+		angle = (acos(cos_alpha) * 180.0f/M_PI) - 90.0f;
+	}
+
+	
 	font.SetRotation(angle);
+	view->SetFont(&font);
 	view->DrawString(ss.str().c_str());
 }
 
