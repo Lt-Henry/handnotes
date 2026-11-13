@@ -33,21 +33,6 @@ SOFTWARE.
 
 namespace handnotes
 {
-	enum class PageFormat
-	{
-		A3,
-		A4,
-		A4Landscape,
-		A5
-	};
-	
-	enum class PageType
-	{
-		Plain,
-		Dotted,
-		Squared,
-		Ruled
-	};
 	
 	class Page: public Object
 	{

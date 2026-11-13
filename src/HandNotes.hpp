@@ -69,5 +69,21 @@ namespace handnotes
 		rgb_color border;
 		rgb_color dots;
 	};
+	
+	enum class PageFormat
+	{
+		A3,
+		A4,
+		A4Landscape,
+		A5
+	};
+	
+	enum class PageType
+	{
+		Plain,
+		Dotted,
+		Squared,
+		Ruled
+	};
 }
 #endif
