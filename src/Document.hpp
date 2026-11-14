@@ -26,7 +26,6 @@ SOFTWARE.
 #define HAND_DOCUMENT
 
 #include "HandNotes.hpp"
-#include "Object.hpp"
 
 #include <vector>
 
@@ -34,7 +33,7 @@ namespace handnotes
 {
 	class Page;
 	
-	class Document: public Object
+	class Document
 	{
 		public:
 		

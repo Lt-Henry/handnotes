@@ -31,7 +31,7 @@ SOFTWARE.
 using namespace handnotes;
 using namespace std;
 
-Document::Document(PageFormat format, PageType type,float dpi) : Object('HDOC'), format(format), type(type), dpi(dpi)
+Document::Document(PageFormat format, PageType type,float dpi): format(format), type(type), dpi(dpi)
 {
 }
 

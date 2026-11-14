@@ -43,6 +43,7 @@ HandView::HandView(BRect frame)
 	scale = 1.0f;
 	ox = 0.0f;
 	oy = 0.0f;
+	firstTime = true;
 	action = Action::None;
 	SetTool(Tool::FreeHand);
 	SetDrawingTool(DrawingTool::Pencil);
@@ -50,7 +51,9 @@ HandView::HandView(BRect frame)
 	cursor_default = new BCursor(B_CURSOR_ID_SYSTEM_DEFAULT);
 	cursor_grab = new BCursor(B_CURSOR_ID_GRABBING);
 	
-	page = new handnotes::Page(PageFormat::A4, PageType::Dotted, dpi);
+	//page = new handnotes::Page(PageFormat::A4, PageType::Dotted, dpi);
+	document = nullptr;
+	page = nullptr;
 }
 
 HandView::~HandView()
@@ -95,6 +98,10 @@ void HandView::FrameResized(float width, float height)
 void HandView::MouseDown(BPoint where)
 {
 	int32 buttons;
+	
+	if (firstTime) {
+		return;
+	}
 	
 	if(Window()->CurrentMessage()->FindInt32("buttons",&buttons) != B_OK) {
 		return;
@@ -145,6 +152,10 @@ void HandView::MouseDown(BPoint where)
 
 void HandView::MouseUp(BPoint where)
 {
+	if (firstTime) {
+		return;
+	}
+	
 	where.x = where.x / scale;
 	where.y = where.y / scale;
 	where.x = where.x - ox;
@@ -169,7 +180,10 @@ void HandView::MouseUp(BPoint where)
 
 void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 {
-
+	if (firstTime) {
+		return;
+	}
+	
 	if (action==Action::Draw) {
 		
 		where.x = where.x / scale;
@@ -196,6 +210,10 @@ void HandView::MouseMoved(BPoint where, uint32 transit,const BMessage* message)
 
 void HandView::KeyDown(const char* bytes, int32 numBytes)
 {
+	if (firstTime) {
+		return;
+	}
+	
 	for (int32 n=0;n<numBytes;n++) {
 		switch(bytes[n]) {
 			case 'h':
@@ -227,6 +245,10 @@ void HandView::KeyDown(const char* bytes, int32 numBytes)
 
 void HandView::Draw(BRect updateRect)
 {
+	if (firstTime) {
+		return;
+	}
+	
 	BAffineTransform mat;
 	SetTransform(mat);
 	ScaleBy(scale,scale);
@@ -237,6 +259,24 @@ void HandView::Draw(BRect updateRect)
 	if (action == Action::Draw) {
 		preview->Draw(this);
 	}
+}
+
+void HandView::CreateDocument(PageFormat format, PageType type)
+{
+	if (document) {
+		delete document;
+		document = nullptr;
+		page = nullptr;
+	}
+
+	clog<<"Creating new Document..."<<endl;
+	
+	document = new handnotes::Document(format,type,dpi);
+	page = document->AddPage();
+	Invalidate();
+	
+	firstTime = false;
+	
 }
 
 void HandView::Home()
@@ -272,6 +312,10 @@ void HandView::NoZoom()
 
 void HandView::ZoomFitPage()
 {
+	if (firstTime) {
+		return;
+	}
+	
 	ox = 0;
 	oy = 0;
 	
@@ -290,6 +334,10 @@ void HandView::ZoomFitPage()
 
 void HandView::ZoomFitDrawing()
 {
+	if (firstTime) {
+		return;
+	}
+	
 	BRect area = page->ChildrenBounds();
 	
 	float dpmm = dpi/25.4f;

@@ -26,6 +26,7 @@ SOFTWARE.
 #define HAND_VIEW
 
 #include "Path.hpp"
+#include "Document.hpp"
 #include "Page.hpp"
 
 #include <View.h>
@@ -73,6 +74,8 @@ namespace handnotes
 		virtual void KeyDown(const char* bytes, int32 numBytes);
 		virtual void Draw(BRect updateRect);
 		
+		void CreateDocument(PageFormat format, PageType type);
+		
 		void Home();
 		void ZoomIn();
 		void ZoomOut();
@@ -82,9 +85,12 @@ namespace handnotes
 		void SetDrawingTool(DrawingTool dt);
 		void SetTool(Tool t);
 		
+		handnotes::Document* document;
 		handnotes::Page* page;
 		
 		protected:
+
+		bool firstTime;
 
 		double dpi;
 		double scale;

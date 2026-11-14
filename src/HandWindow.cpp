@@ -54,7 +54,100 @@ HandWindow::HandWindow()
 	
 	menu->AddItem(menuFile);
 	
-	menuFile->AddItem(new BMenuItem("New",new BMessage(Message::MenuNew)));
+	BMenu* menuNew = new BMenu("New");
+	BMenu* subMenu = new BMenu("A3");
+	BMessage* msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A3));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Plain));
+	subMenu->AddItem(new BMenuItem("Plain",msgNew));
+	
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A3));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Dotted));
+	subMenu->AddItem(new BMenuItem("Dotted",msgNew));
+	
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A3));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Squared));
+	subMenu->AddItem(new BMenuItem("Square",msgNew));
+	
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A3));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Ruled));
+	subMenu->AddItem(new BMenuItem("Ruled",msgNew));
+
+	menuNew->AddItem(subMenu);
+	
+	subMenu = new BMenu("A4");
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A4));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Plain));
+	subMenu->AddItem(new BMenuItem("Plain",msgNew));
+	
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A4));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Dotted));
+	subMenu->AddItem(new BMenuItem("Dotted",msgNew));
+	
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A4));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Squared));
+	subMenu->AddItem(new BMenuItem("Square",msgNew));
+	
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A4));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Ruled));
+	subMenu->AddItem(new BMenuItem("Ruled",msgNew));
+
+	menuNew->AddItem(subMenu);
+	
+	subMenu = new BMenu("A4 Landscape");
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A4Landscape));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Plain));
+	subMenu->AddItem(new BMenuItem("Plain",msgNew));
+	
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A4Landscape));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Dotted));
+	subMenu->AddItem(new BMenuItem("Dotted",msgNew));
+	
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A4Landscape));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Squared));
+	subMenu->AddItem(new BMenuItem("Square",msgNew));
+	
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A4Landscape));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Ruled));
+	subMenu->AddItem(new BMenuItem("Ruled",msgNew));
+
+	menuNew->AddItem(subMenu);
+	
+	subMenu = new BMenu("A5");
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A5));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Plain));
+	subMenu->AddItem(new BMenuItem("Plain",msgNew));
+	
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A5));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Dotted));
+	subMenu->AddItem(new BMenuItem("Dotted",msgNew));
+	
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A5));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Squared));
+	subMenu->AddItem(new BMenuItem("Square",msgNew));
+	
+	msgNew = new BMessage(Message::MenuNew);
+	msgNew->AddInt32("format",static_cast<int>(PageFormat::A5));
+	msgNew->AddInt32("type",static_cast<int>(PageType::Ruled));
+	subMenu->AddItem(new BMenuItem("Ruled",msgNew));
+
+	menuNew->AddItem(subMenu);
+	
+	menuFile->AddItem(menuNew);
 	menuFile->AddItem(new BMenuItem("Open",new BMessage(Message::MenuOpen)));
 	menuFile->AddItem(new BMenuItem("Save",new BMessage(Message::MenuSave)));
 	menuFile->AddItem(new BMenuItem("Export",new BMessage(Message::MenuExport)));
@@ -161,7 +254,12 @@ void HandWindow::MessageReceived(BMessage* message)
 	switch (message->what) {
 	
 		//new
-		case Message::MenuNew:
+		case Message::MenuNew: {
+			int pageFormat = message->FindInt32("format");
+			int pageType = message->FindInt32("type");
+			
+			view->CreateDocument(static_cast<PageFormat>(pageFormat),static_cast<PageType>(pageType));
+		}
 		break;
 		
 		//open file
